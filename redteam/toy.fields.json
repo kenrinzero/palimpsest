@@ -1,0 +1,13 @@
+{
+  "sample": "redteam/toy.bin",
+  "independence": "self-generated",
+  "fields": [
+    {
+      "name": "width",
+      "kaitai_path": "width",
+      "ffprobe_path": ".",
+      "kind": "numeric"
+    }
+  ],
+  "self_checked": []
+}

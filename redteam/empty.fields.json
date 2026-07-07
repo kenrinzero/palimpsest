@@ -1,0 +1,6 @@
+{
+  "sample": "samples/au/sine.au",
+  "independence": "self-generated",
+  "fields": [],
+  "self_checked": ["claims oracle backing while comparing nothing — red-team case (c)"]
+}

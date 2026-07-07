@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+# Pinned Kaitai compiler wrapper (DESIGN.md § 1). All harness invocations
+# go through this; never call a system ksc.
+set -euo pipefail
+KAITAI_HOME="${KAITAI_HOME:-$HOME/opt/kaitai}"
+export JAVA_HOME="$KAITAI_HOME/jre"
+export PATH="$JAVA_HOME/bin:$PATH"
+exec "$KAITAI_HOME/compiler/bin/kaitai-struct-compiler" "$@"

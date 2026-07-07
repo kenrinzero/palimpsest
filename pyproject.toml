@@ -1,0 +1,15 @@
+[project]
+name = "palimpsest"
+version = "0.0.1"
+description = "Machine-validated Kaitai specs for game-era media container headers"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+dependencies = ["kaitaistruct>=0.10"]
+
+[dependency-groups]
+dev = []
+
+# script-style repo: check.sh is the gate; no wheel to build
+[tool.uv]
+package = false

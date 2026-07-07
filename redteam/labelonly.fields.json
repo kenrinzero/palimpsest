@@ -1,0 +1,13 @@
+{
+  "sample": "samples/au/sine.au",
+  "independence": "self-generated",
+  "fields": [
+    {
+      "name": "codec_name",
+      "kaitai_path": "magic",
+      "ffprobe_path": ".streams[0].codec_name",
+      "kind": "label"
+    }
+  ],
+  "self_checked": []
+}

@@ -1,0 +1,6 @@
+.venv/
+__pycache__/
+*.pyc
+build/
+# non-redistributable head-format sample cache (refetchable via manifests)
+samples/_staged/
