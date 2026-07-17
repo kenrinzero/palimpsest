@@ -27,15 +27,21 @@ Enforce the `self_checked` vocabulary (chunk-size-sum == file length,
 monotonic offsets, declared-count == walked-count); wire `mediainfo`
 cross-checking if/when installed (best-effort — DESIGN § 4).
 
-## Tier 3 — decode-only head sample staging (T1/web prep, one row per format)
+## Tier 3 — decode-only head sample staging — ALL STAGED 2026-07-17
+
+FATE-suite bytes (no clear license → gitignored `samples/_staged/`,
+refetch via `harness/stage_heads.py`, sha256-pinned; provenance + probe
+values in `samples/SOURCES.md`). If `_staged/` is missing, run the script
+once before dispatching a head unit. All five head units below are now
+dispatchable (Tier 4).
 
 | format | sample | provenance rule |
 |---|---|---|
-| smk (Smacker) | NOT STAGED | tiny clearly-redistributable clip or self-authored via original tools; commit only if license-clean, else `samples/_staged/` cache + manifest (DESIGN § 6) |
-| bink | NOT STAGED | same |
-| wsvqa (Westwood VQA) | NOT STAGED | same |
-| ipmovie (Interplay MVE) | NOT STAGED | same |
-| flic (FLIC/FLC) | NOT STAGED | same |
+| smk (Smacker) | **STAGED** `_staged/smk/wetlogo.smk` | FATE `smacker/wetlogo.smk`; not license-clean → gitignored cache + manifest (DESIGN § 6) |
+| bink | **STAGED** `_staged/bink/RazOnBull.bik` | FATE `bink/RazOnBull.bik`; same |
+| wsvqa (Westwood VQA) | **STAGED** `_staged/wsvqa/small-cut-v3.vqa` | FATE `vqa/small-cut-v3.vqa`; same |
+| ipmovie (Interplay MVE) | **STAGED** `_staged/ipmovie/descent3-level5-16bit-partial.mve` | FATE `interplay-mve/…-partial.mve`; same |
+| flic (FLIC/FLC) | **STAGED** `_staged/flic/jj00c2.fli` | FATE `fli/jj00c2.fli`; same (video-only sample — sidecar oracle = width/height/fps) |
 
 ## Tier 4 — breadth (after starters green)
 
