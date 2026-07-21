@@ -64,6 +64,29 @@ validate_sidecar() {
     || red "$base: self_checked must contain unique canonical assertion kinds"
 }
 
+json_scalar() { # <json-document> <jq-path>
+  local document="$1" path="$2" values count value_kind value
+  values="$(jq -cer "[${path}]" <<<"$document" 2>/dev/null)" || return 2
+  count="$(jq -r 'length' <<<"$values")" || return 2
+  [ "$count" -gt 0 ] || return 1
+  [ "$count" -eq 1 ] || return 2
+
+  value_kind="$(jq -r '.[0] | type' <<<"$values")" || return 2
+  case "$value_kind" in
+    null) return 1 ;;
+    array|object) return 2 ;;
+  esac
+  value="$(jq -r '.[0] | tostring' <<<"$values")" || return 2
+  [ -n "$value" ] || return 1
+  printf '%s\n' "$value"
+}
+
+numeric_equal() { # <left> <right>
+  jq -en --arg left "$1" --arg right "$2" '
+    try (($left | tonumber) == ($right | tonumber)) catch false
+  ' >/dev/null
+}
+
 check_spec() { # <ksy> <sidecar>
   local ksy="$1" sc="$2"
   local fmt; fmt="$(basename "$ksy" .ksy)"
@@ -80,17 +103,23 @@ check_spec() { # <ksy> <sidecar>
   local parsed probe
   parsed="$(cd "$ROOT" && uv run python harness/extract.py build "$fmt" "$sample" "$sc")" \
     || red "$fmt: parse/extract failed"
-  probe="$(ffprobe -v quiet -of json -show_streams -show_format "$sample")"
+  if ! probe="$(ffprobe -v quiet -of json -show_streams -show_format "$sample")"; then
+    red "$fmt: ffprobe invocation failed"
+  fi
+  jq -e . <<<"$probe" >/dev/null 2>&1 \
+    || red "$fmt: ffprobe emitted malformed JSON"
   local count i name kind fpath want got
   count=$(jq ".fields | length" "$sc")
   for ((i = 0; i < count; i++)); do
     name=$(jq -r ".fields[$i].name" "$sc")
     kind=$(jq -r ".fields[$i].kind" "$sc")
     fpath=$(jq -r ".fields[$i].ffprobe_path" "$sc")
-    want=$(echo "$probe" | jq -r "$fpath")
+    if ! want="$(json_scalar "$probe" "$fpath")"; then
+      red "$fmt: $name has no single usable FFprobe oracle value"
+    fi
     got=$(echo "$parsed" | grep "^$name=" | cut -d= -f2-)
     if [ "$kind" = "numeric" ]; then
-      [ "$got" = "$want" ] || [ "$((got))" = "$((want))" ] 2>/dev/null \
+      numeric_equal "$got" "$want" \
         || red "$fmt: $name differs — kaitai=$got ffprobe=$want (differential bite)"
     else
       [ "$got" = "$want" ] \
@@ -125,7 +154,7 @@ selftest() {
   esac
   trap 'rm -rf -- "$SELFTEST_TMP"' EXIT
 
-  echo "selftest 1/6: toy compile + parse via pinned toolchain"
+  echo "selftest 1/7: toy compile + parse via pinned toolchain"
   mkdir -p "$ROOT/build"
   "$KSC" --target python --outdir "$ROOT/build" "$ROOT/redteam/toy.ksy"
   local out
@@ -133,23 +162,23 @@ selftest() {
         redteam/toy.bin redteam/toy.fields.json)"
   echo "$out" | grep -q "^width=64$" || { echo "selftest FAIL: toy parse"; exit 1; }
 
-  echo "selftest 2/6: red-team (b) — compile failure must bite"
+  echo "selftest 2/7: red-team (b) — compile failure must bite"
   if "$KSC" --target python --outdir "$ROOT/build" "$ROOT/redteam/toy_compilefail.ksy" \
       >/dev/null 2>&1; then
     echo "selftest FAIL: broken .ksy compiled"; exit 1
   fi
 
-  echo "selftest 3/6: red-team (c) — empty oracle map must be rejected"
+  echo "selftest 3/7: red-team (c) — empty oracle map must be rejected"
   if (validate_sidecar "$ROOT/redteam/empty.fields.json") 2>/dev/null; then
     echo "selftest FAIL: empty map accepted"; exit 1
   fi
 
-  echo "selftest 4/6: red-team (d) — label-only map must be rejected"
+  echo "selftest 4/7: red-team (d) — label-only map must be rejected"
   if (validate_sidecar "$ROOT/redteam/labelonly.fields.json") 2>/dev/null; then
     echo "selftest FAIL: label-only map accepted"; exit 1
   fi
 
-  echo "selftest 5/6: Tier-2 sidecar and self_checked vocabulary"
+  echo "selftest 5/7: Tier-2 sidecar and self_checked vocabulary"
   local sc
   sc="$(make_sidecar_variant canonical \
     '.self_checked = [
@@ -207,10 +236,43 @@ selftest() {
   sc="$(make_sidecar_variant empty_name '.fields[0].name = ""')"
   expect_sidecar_rejected "$sc" "empty field name"
 
-  echo "selftest 6/6: red-team (a) — wrong-offset spec must go RED on the differential"
+  echo "selftest 6/7: red-team (a) — wrong-offset spec must go RED on the differential"
   if (check_spec "$ROOT/redteam/au_wrong_offset.ksy" \
         "$ROOT/redteam/au_wrong_offset.fields.json") >/dev/null 2>&1; then
     echo "selftest FAIL: wrong-offset spec passed the differential"; exit 1
+  fi
+
+  echo "selftest 7/7: undecidable oracle values must not pass"
+  if (check_spec "$ROOT/redteam/au_null_oracle.ksy" \
+        "$ROOT/redteam/au_null_oracle.fields.json") >/dev/null 2>&1; then
+    echo "selftest FAIL: missing FFprobe value passed as literal null"
+    exit 1
+  fi
+
+  local scalar
+  scalar="$(json_scalar '{"value":"8000"}' '.value')" \
+    || { echo "selftest FAIL: usable scalar rejected"; exit 1; }
+  [ "$scalar" = "8000" ] \
+    || { echo "selftest FAIL: scalar changed"; exit 1; }
+  if json_scalar '{}' '.missing' >/dev/null 2>&1; then
+    echo "selftest FAIL: missing scalar accepted"; exit 1
+  fi
+  if json_scalar '{"value":null}' '.value' >/dev/null 2>&1; then
+    echo "selftest FAIL: null scalar accepted"; exit 1
+  fi
+  if json_scalar '{"value":[]}' '.value' >/dev/null 2>&1; then
+    echo "selftest FAIL: array accepted as scalar"; exit 1
+  fi
+  if json_scalar '{"values":[1,2]}' '.values[]' >/dev/null 2>&1; then
+    echo "selftest FAIL: multiple values accepted as scalar"; exit 1
+  fi
+  if json_scalar '{broken' '.value' >/dev/null 2>&1; then
+    echo "selftest FAIL: malformed JSON accepted"; exit 1
+  fi
+  numeric_equal "8000" "8000.0" \
+    || { echo "selftest FAIL: numeric normalization rejected equality"; exit 1; }
+  if numeric_equal "8000" "7999"; then
+    echo "selftest FAIL: unequal numerics accepted"; exit 1
   fi
 
   echo "selftest GREEN: toy machinery works and all four red-team cases bite"
