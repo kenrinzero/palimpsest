@@ -11,6 +11,30 @@ staged by Tier-3 prep units with per-file provenance added here.
 | `samples/voc/sine.voc` | 22269 | self-generated (gen_samples.sh) | `3b0783fb372c3ec120a59afbad1aa241b330e547bfcff9b3d39dea03c93f416e` |
 | `samples/roq/test.roq` | 9432 | self-generated (gen_samples.sh) | `3c638a31a5e0a28892c6986a8afe603af36e541976d4cf844b3940c84d3d6713` |
 
+## Tier-4 self-generated breadth — 2026-07-21
+
+AIFF and DPX were generated explicitly with the same pinned FFmpeg 6.1.1
+used by the differential oracle. They are outside the three frozen starter
+recipes in `harness/gen_samples.sh`; the exact commands below are their
+reproducible provenance. Repeated renders were byte-identical.
+
+```bash
+ffmpeg -hide_banner -loglevel error \
+  -f lavfi -i 'sine=frequency=1000:sample_rate=8000:duration=0.01' \
+  -map_metadata -1 -fflags +bitexact -flags:a +bitexact \
+  -c:a pcm_s16be -f aiff -y samples/aiff/sine.aiff
+
+ffmpeg -hide_banner -loglevel error \
+  -f lavfi -i 'testsrc=size=32x24:rate=1' -frames:v 1 -an \
+  -c:v dpx -pix_fmt rgb24 -flags:v +bitexact \
+  -f image2 -y samples/dpx/test.dpx
+```
+
+| file | bytes | provenance | sha256 |
+|---|---:|---|---|
+| `samples/aiff/sine.aiff` | 214 | self-generated (command above) | `da0f266289d94e7b9238b2094a2281bd3eb7193345384a4b95203841801eecab` |
+| `samples/dpx/test.dpx` | 3968 | self-generated (command above) | `30f6cc19b2c1ce02ec150dc04b4dcca17f463683c359f4a5811c88e09c134999` |
+
 ## Decode-only heads — STAGED 2026-07-17 (Tier-3 prep unit)
 
 Third-party real bytes from the FFmpeg FATE suite

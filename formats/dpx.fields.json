@@ -1,0 +1,10 @@
+{
+  "sample": "samples/dpx/test.dpx",
+  "independence": "self-generated",
+  "fields": [
+    { "name": "width", "kaitai_path": "body.image_information.pixels_per_line", "ffprobe_path": ".streams[0].width", "kind": "numeric" },
+    { "name": "height", "kaitai_path": "body.image_information.lines_per_image_element", "ffprobe_path": ".streams[0].height", "kind": "numeric" },
+    { "name": "codec_name", "kaitai_path": "codec_label", "ffprobe_path": ".streams[0].codec_name", "kind": "label" }
+  ],
+  "self_checked": []
+}

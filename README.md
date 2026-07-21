@@ -1,7 +1,8 @@
 # Palimpsest
 
 A machine-validated catalogue of game-era media container headers —
-Smacker, Bink, Westwood VQA, Interplay MVE, FLIC, RoQ, DPX, VOC, AU —
+Smacker, Bink, Westwood VQA, Interplay MVE, FLIC, RoQ, DPX, AIFF, VOC,
+and AU —
 written as language-neutral **Kaitai Struct** `.ksy` specs and proven by a
 **differential gate**: the compiled Kaitai parser and `ffprobe -of json`
 must agree, field by field, on real bytes. A spec that merely compiles, or
@@ -10,12 +11,12 @@ offset-sensitive field must match the oracle.
 
 ## Status
 
-Eight specs are implemented and differential-GREEN as of 2026-07-21:
-AU, VOC, RoQ, Smacker, Bink, Westwood VQA, Interplay MVE, and FLIC/FLC.
-The three self-generated tail samples and five hash-pinned third-party
-head samples all match `ffprobe` on numeric, offset-sensitive fields; the
-parsers also validate format identities and bound fixed headers and chunk
-payloads. DPX and the additional AIFF breadth unit remain pending.
+Ten specs are implemented and differential-GREEN as of 2026-07-21:
+AU, VOC, RoQ, Smacker, Bink, Westwood VQA, Interplay MVE, FLIC/FLC,
+AIFF, and DPX. The five self-generated samples and five hash-pinned
+third-party samples all match `ffprobe` on numeric, offset-sensitive
+fields; the parsers also validate format identities and bound fixed
+headers and chunk payloads. Tier 4 breadth is complete.
 
 The Stage-0 harness remains pinned to Temurin 21.0.11 and Kaitai compiler
 0.11, with all four red-team cases proven to drive `check.sh` red.

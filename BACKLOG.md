@@ -43,11 +43,15 @@ implemented and GREEN.
 | ipmovie (Interplay MVE) | **DONE 2026-07-19** (Reasonix), reconciled 2026-07-21 (Codex) | BOUNDED OPCODE WALK: first INIT_VIDEO chunk through INIT_VIDEO_BUFFERS; 640×320 (stored/8 → ×8), interplayvideo, GREEN |
 | flic (FLIC/FLC) | **DONE 2026-07-19** (Reasonix), reconciled 2026-07-21 (Codex) | BOUNDED FIXED HEADER: 128 bytes; 640×480 plus FLC timing oracle, flic, GREEN. Eight implemented specs now pass (3 self-generated + 5 third-party). |
 
-## Tier 4 — breadth — IN PROGRESS
+## Tier 4 — breadth — DONE 2026-07-21
 
-The five staged head formats are complete. `aiff` and `dpx` (via image2)
-remain as breadth units; each needs a header spec, at least one numeric
-oracle field, and an explicit independence regime.
+The five staged head formats plus the two final self-generated breadth
+units are complete.
+
+| format | result | independence and numeric oracle |
+|---|---|---|
+| aiff | **DONE 2026-07-21** (Codex) | **Net-new**; self-generated 80-frame PCM sample; bounded FORM/chunk walk through COMM; channels, sample frames, and bits/sample GREEN. |
+| dpx | **DONE 2026-07-21** (Codex) | **Net-new**; self-generated image2/DPX sample; endian selected from SDPX/XPDS; width and height at the standard image-information offsets GREEN. |
 
 ## Tier 5 — depth + novel RE (routed sparingly, T1, three-attempt cap)
 
