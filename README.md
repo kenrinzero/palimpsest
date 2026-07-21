@@ -33,6 +33,12 @@ Green = the spec and FFmpeg agree on real, offset-parsed values, under the
 independence regime the sidecar declares (self-generated vs third-party —
 see DESIGN.md § 4).
 
+Sidecars may also declare canonical `self_checked` consistency claims, always
+reported as recorded and not oracle-backed. Selected numeric fields in the
+self-generated AU, AIFF, and DPX units opt into MediaInfo as a best-effort
+second oracle. MediaInfo is not required; each run reports exactly which
+mapped fields were checked or skipped.
+
 ## License
 
 MIT. Generated samples are self-authored; decode-only head samples carry

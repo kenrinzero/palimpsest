@@ -21,11 +21,13 @@ starter samples generated + sidecars authored.
 | S2 `voc` | T3 | improving | **DONE 2026-07-19** (Reasonix), reconciled 2026-07-21 (Codex). Validated 26-byte header plus a bounded type-9 first block; sample-rate, channels, and codec oracles GREEN. Legacy type-1 and full block traversal remain depth work. |
 | S3 `roq` | T3 | **net-new** | **DONE 2026-07-19** (Reasonix), reconciled 2026-07-21 (Codex). Validated 8-byte header and bounded chunk walk through the first QUAD_INFO, including valid sound-before-info order; dimensions, frame rate, and codec oracles GREEN. |
 
-## Tier 2 — oracle/self-checked boundary hardening (T2 harness unit)
+## Tier 2 — oracle/self-checked boundary hardening — DONE 2026-07-21
 
-Enforce the `self_checked` vocabulary (chunk-size-sum == file length,
-monotonic offsets, declared-count == walked-count); wire `mediainfo`
-cross-checking if/when installed (best-effort — DESIGN § 4).
+`self_checked` now accepts only the three canonical bounded consistency
+claims and never contributes oracle credit. Sidecars reject unknown kinds,
+regimes, and unusable oracle paths. AU, AIFF, and DPX carry proven numeric
+MediaInfo mappings that run when the optional CLI is installed; missing
+support skips visibly, while usable disagreements and broken output go red.
 
 ## Tier 3 — decode-only head sample staging — DONE 2026-07-17
 

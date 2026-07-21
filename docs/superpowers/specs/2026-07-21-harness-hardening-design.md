@@ -1,27 +1,28 @@
 # Palimpsest Tier-2 Harness Hardening Design
 
 **Date:** 2026-07-21  
-**Status:** Approved for implementation  
+**Status:** Implemented
 **Scope:** `check.sh`, its selftest fixtures, the field sidecars, and the
 documentation that defines their contract
 
 ## Context
 
-Palimpsest's differential gate already requires every format to expose at
-least one numeric, offset-sensitive field that agrees between its compiled
-Kaitai parser and FFprobe. Two planned Tier-2 protections are still absent:
+Before this unit, Palimpsest's differential gate already required every
+format to expose at least one numeric, offset-sensitive field that agreed
+between its compiled Kaitai parser and FFprobe. Two planned Tier-2 protections
+were absent:
 
-1. `self_checked` accepts arbitrary text even though only three bounded
+1. `self_checked` accepted arbitrary text even though only three bounded
    self-consistency assertion kinds are legitimate.
 2. Self-generated fixtures are encoded and adjudicated by FFmpeg. MediaInfo
-   can provide a second implementation for some numeric fields, but it is not
-   installed in the current environment and does not recognize every format.
+   could provide a second implementation for some numeric fields, but it was
+   not installed in the target environment and did not recognize every format.
 
 The archived project plan also requires the harness to reject an undecidable
-field presented as oracle-backed. The current shell treats unknown field kinds
-as labels and can accept a literal `null` from a missing FFprobe path, so this
-unit closes those adjacent schema holes as part of the same oracle-boundary
-hardening.
+field presented as oracle-backed. The pre-unit shell treated unknown field
+kinds as labels and could accept a literal `null` from a missing FFprobe path,
+so this unit closed those adjacent schema holes as part of the same
+oracle-boundary hardening.
 
 ## Goals
 
@@ -153,29 +154,32 @@ scope of the added evidence.
 
 ## Test strategy
 
-Implementation will follow red-green-refactor cycles through
+Implementation followed red-green-refactor cycles through
 `./check.sh --selftest`.
 
-1. Add failing sidecar-validation tests for an unknown/near-match
+1. Added failing sidecar-validation tests for an unknown/near-match
    `self_checked` token, malformed list shapes, duplicates, an unknown field
    kind, and null FFprobe oracle output.
-2. Add passing validation coverage for an empty list and each canonical token.
-3. Add a deterministic fake MediaInfo executable and failing tests for a
+2. Added passing validation coverage for an empty list and each canonical
+   token.
+3. Added a deterministic fake MediaInfo executable and failing tests for a
    numeric mismatch, malformed JSON, command failure, and ambiguous output.
-4. Add green tests for a matching numeric value, a missing mapped field that
+4. Added green tests for a matching numeric value, a missing mapped field that
    is visibly skipped, and binary absence.
-5. Keep the original toy compile/parse smoke and all four original red-team
+5. Kept the original toy compile/parse smoke and all four original red-team
    cases biting, especially `redteam/au_wrong_offset.ksy`.
-6. Run every implemented format gate after selftest, including staged
-   third-party fixtures, and confirm the repository is clean after the final
+6. Ran every implemented format gate after selftest, including staged
+   third-party fixtures, and confirmed the repository was clean after the final
    commit.
 
 ## Documentation impact
 
-After the code is green:
+The green implementation completed its repository documentation impact:
 
-- Amend `DESIGN.md` with the now-settled Tier-2 schema and error semantics
-  while retaining its frozen-contract status.
-- Mark Tier 2 done in `BACKLOG.md`.
-- Update `README.md` to describe the optional second-oracle output.
-- Update Atelier state during the normal clock-out protocol.
+- `DESIGN.md` records the settled Tier-2 schema and error semantics while
+  retaining its frozen-contract status.
+- `BACKLOG.md` marks Tier 2 done.
+- `README.md` describes the optional second-oracle output.
+
+Atelier state remains outside this repository and is handled during the
+umbrella session's normal clock-out protocol.
