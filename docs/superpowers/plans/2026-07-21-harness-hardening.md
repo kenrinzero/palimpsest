@@ -55,7 +55,8 @@ Add these helpers immediately before `selftest()`:
 
 ```bash
 make_sidecar_variant() { # <name> <jq-filter>
-  local name="$1" filter="$2" out="$SELFTEST_TMP/$name.fields.json"
+  local name="$1" filter="$2"
+  local out="$SELFTEST_TMP/$name.fields.json"
   jq "$filter" "$ROOT/redteam/toy.fields.json" >"$out"
   printf '%s\n' "$out"
 }
