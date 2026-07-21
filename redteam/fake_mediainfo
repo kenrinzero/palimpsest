@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+[ "${1:-}" = "--Output=JSON" ] || exit 64
+[ "${2:-}" = "--File_TestContinuousFileNames=0" ] || exit 64
+[ "$#" -eq 3 ] || exit 64
+
+case "${PALIMPSEST_FAKE_MEDIAINFO_MODE:-match}" in
+  match)
+    printf '%s\n' '{"media":{"track":[{"@type":"Audio","SamplingRate":"8000","Channels":"1"}]}}'
+    ;;
+  missing)
+    printf '%s\n' '{"media":{"track":[{"@type":"Audio","SamplingRate":"8000"}]}}'
+    ;;
+  mismatch)
+    printf '%s\n' '{"media":{"track":[{"@type":"Audio","SamplingRate":"7999","Channels":"1"}]}}'
+    ;;
+  malformed)
+    printf '%s\n' '{broken'
+    ;;
+  failure)
+    exit 23
+    ;;
+  nonscalar)
+    printf '%s\n' '{"media":{"track":[{"@type":"Audio","SamplingRate":{"raw":"8000"},"Channels":"1"}]}}'
+    ;;
+  *)
+    exit 65
+    ;;
+esac

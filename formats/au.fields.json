@@ -2,8 +2,8 @@
   "sample": "samples/au/sine.au",
   "independence": "self-generated",
   "fields": [
-    { "name": "sample_rate", "kaitai_path": "sample_rate", "ffprobe_path": ".streams[0].sample_rate", "kind": "numeric" },
-    { "name": "channels", "kaitai_path": "channels", "ffprobe_path": ".streams[0].channels", "kind": "numeric" },
+    { "name": "sample_rate", "kaitai_path": "sample_rate", "ffprobe_path": ".streams[0].sample_rate", "mediainfo_path": ".media.track | map(select(.\"@type\" == \"Audio\"))[0].SamplingRate", "kind": "numeric" },
+    { "name": "channels", "kaitai_path": "channels", "ffprobe_path": ".streams[0].channels", "mediainfo_path": ".media.track | map(select(.\"@type\" == \"Audio\"))[0].Channels", "kind": "numeric" },
     { "name": "codec_name", "kaitai_path": "codec_label", "ffprobe_path": ".streams[0].codec_name", "kind": "label" }
   ],
   "self_checked": []

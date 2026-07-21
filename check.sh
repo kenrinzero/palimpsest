@@ -41,7 +41,14 @@ validate_sidecar() {
       (.name | type == "string" and length > 0) and
       (.kaitai_path | type == "string" and length > 0) and
       (.ffprobe_path | type == "string" and length > 0) and
-      (.kind == "numeric" or .kind == "label")
+      (.kind == "numeric" or .kind == "label") and
+      (
+        (has("mediainfo_path") | not) or
+        (
+          .kind == "numeric" and
+          (.mediainfo_path | type == "string" and length > 0)
+        )
+      )
     )
   ' "$sc" >/dev/null \
     || red "$base: every field needs non-empty paths and kind numeric or label"
@@ -87,6 +94,17 @@ numeric_equal() { # <left> <right>
   ' >/dev/null
 }
 
+resolve_mediainfo() {
+  if [ "${PALIMPSEST_MEDIAINFO_BIN+x}" = x ]; then
+    [ -n "$PALIMPSEST_MEDIAINFO_BIN" ] \
+      && [ -x "$PALIMPSEST_MEDIAINFO_BIN" ] \
+      || return 2
+    printf '%s\n' "$PALIMPSEST_MEDIAINFO_BIN"
+    return 0
+  fi
+  command -v mediainfo 2>/dev/null || return 1
+}
+
 check_spec() { # <ksy> <sidecar>
   local ksy="$1" sc="$2"
   local fmt; fmt="$(basename "$ksy" .ksy)"
@@ -127,6 +145,52 @@ check_spec() { # <ksy> <sidecar>
     fi
     echo "  ok: $name kaitai=$got == ffprobe=$want [$kind]"
   done
+
+  local mediainfo_total
+  mediainfo_total="$(jq '[.fields[] | select(has("mediainfo_path"))] | length' "$sc")"
+  if [ "$mediainfo_total" -gt 0 ]; then
+    local mediainfo_bin mediainfo_status
+    if mediainfo_bin="$(resolve_mediainfo)"; then
+      local mediainfo_probe
+      if ! mediainfo_probe="$("$mediainfo_bin" \
+          --Output=JSON --File_TestContinuousFileNames=0 "$sample")"; then
+        red "$fmt: installed MediaInfo invocation failed"
+      fi
+      jq -e . <<<"$mediainfo_probe" >/dev/null 2>&1 \
+        || red "$fmt: installed MediaInfo emitted malformed JSON"
+
+      local mediainfo_checked=0 mediainfo_skipped=0 mediainfo_path mediainfo_want
+      for ((i = 0; i < count; i++)); do
+        mediainfo_path="$(jq -r ".fields[$i].mediainfo_path // empty" "$sc")"
+        [ -n "$mediainfo_path" ] || continue
+        name="$(jq -r ".fields[$i].name" "$sc")"
+        got="$(grep "^$name=" <<<"$parsed" | cut -d= -f2-)"
+
+        if mediainfo_want="$(json_scalar "$mediainfo_probe" "$mediainfo_path")"; then
+          numeric_equal "$got" "$mediainfo_want" \
+            || red "$fmt: $name differs — kaitai=$got mediainfo=$mediainfo_want (second-oracle bite)"
+          echo "  ok: $name kaitai=$got == mediainfo=$mediainfo_want [second oracle]"
+          mediainfo_checked=$((mediainfo_checked + 1))
+        else
+          mediainfo_status=$?
+          if [ "$mediainfo_status" -eq 1 ]; then
+            echo "  mediainfo: $name unavailable (mapped field skipped)"
+            mediainfo_skipped=$((mediainfo_skipped + 1))
+          else
+            red "$fmt: $name MediaInfo path did not resolve to one scalar"
+          fi
+        fi
+      done
+      echo "  mediainfo: checked $mediainfo_checked, skipped $mediainfo_skipped of $mediainfo_total mapped field(s)"
+    else
+      mediainfo_status=$?
+      if [ "$mediainfo_status" -eq 1 ]; then
+        echo "  mediainfo: unavailable; skipped $mediainfo_total mapped field(s)"
+      else
+        red "$fmt: PALIMPSEST_MEDIAINFO_BIN is not an executable file"
+      fi
+    fi
+  fi
   jq -r '.self_checked[]? | "  self-checked (recorded, NOT oracle-backed): " + .' "$sc"
   echo "GREEN: $fmt (independence regime: $regime)"
 }
@@ -154,7 +218,7 @@ selftest() {
   esac
   trap 'rm -rf -- "$SELFTEST_TMP"' EXIT
 
-  echo "selftest 1/7: toy compile + parse via pinned toolchain"
+  echo "selftest 1/8: toy compile + parse via pinned toolchain"
   mkdir -p "$ROOT/build"
   "$KSC" --target python --outdir "$ROOT/build" "$ROOT/redteam/toy.ksy"
   local out
@@ -162,23 +226,23 @@ selftest() {
         redteam/toy.bin redteam/toy.fields.json)"
   echo "$out" | grep -q "^width=64$" || { echo "selftest FAIL: toy parse"; exit 1; }
 
-  echo "selftest 2/7: red-team (b) — compile failure must bite"
+  echo "selftest 2/8: red-team (b) — compile failure must bite"
   if "$KSC" --target python --outdir "$ROOT/build" "$ROOT/redteam/toy_compilefail.ksy" \
       >/dev/null 2>&1; then
     echo "selftest FAIL: broken .ksy compiled"; exit 1
   fi
 
-  echo "selftest 3/7: red-team (c) — empty oracle map must be rejected"
+  echo "selftest 3/8: red-team (c) — empty oracle map must be rejected"
   if (validate_sidecar "$ROOT/redteam/empty.fields.json") 2>/dev/null; then
     echo "selftest FAIL: empty map accepted"; exit 1
   fi
 
-  echo "selftest 4/7: red-team (d) — label-only map must be rejected"
+  echo "selftest 4/8: red-team (d) — label-only map must be rejected"
   if (validate_sidecar "$ROOT/redteam/labelonly.fields.json") 2>/dev/null; then
     echo "selftest FAIL: label-only map accepted"; exit 1
   fi
 
-  echo "selftest 5/7: Tier-2 sidecar and self_checked vocabulary"
+  echo "selftest 5/8: Tier-2 sidecar and self_checked vocabulary"
   local sc
   sc="$(make_sidecar_variant canonical \
     '.self_checked = [
@@ -236,13 +300,13 @@ selftest() {
   sc="$(make_sidecar_variant empty_name '.fields[0].name = ""')"
   expect_sidecar_rejected "$sc" "empty field name"
 
-  echo "selftest 6/7: red-team (a) — wrong-offset spec must go RED on the differential"
+  echo "selftest 6/8: red-team (a) — wrong-offset spec must go RED on the differential"
   if (check_spec "$ROOT/redteam/au_wrong_offset.ksy" \
         "$ROOT/redteam/au_wrong_offset.fields.json") >/dev/null 2>&1; then
     echo "selftest FAIL: wrong-offset spec passed the differential"; exit 1
   fi
 
-  echo "selftest 7/7: undecidable oracle values must not pass"
+  echo "selftest 7/8: undecidable oracle values must not pass"
   if (check_spec "$ROOT/redteam/au_null_oracle.ksy" \
         "$ROOT/redteam/au_null_oracle.fields.json") >/dev/null 2>&1; then
     echo "selftest FAIL: missing FFprobe value passed as literal null"
@@ -275,7 +339,87 @@ selftest() {
     echo "selftest FAIL: unequal numerics accepted"; exit 1
   fi
 
-  echo "selftest GREEN: toy machinery works and all four red-team cases bite"
+  echo "selftest 8/8: optional MediaInfo cross-checking"
+  sc="$(make_sidecar_variant label_mediainfo '
+    .fields += [{
+      "name": "label_with_second_oracle",
+      "kaitai_path": "width",
+      "ffprobe_path": ".",
+      "mediainfo_path": ".media.track[0].Format",
+      "kind": "label"
+    }]
+  ')"
+  expect_sidecar_rejected "$sc" "MediaInfo mapping on label field"
+
+  sc="$(make_sidecar_variant empty_mediainfo_path \
+    '.fields[0].mediainfo_path = ""')"
+  expect_sidecar_rejected "$sc" "empty MediaInfo path"
+
+  sc="$(make_sidecar_variant non_string_mediainfo_path \
+    '.fields[0].mediainfo_path = 42')"
+  expect_sidecar_rejected "$sc" "non-string MediaInfo path"
+
+  local mi_sc="$SELFTEST_TMP/au_mediainfo.fields.json"
+  jq '
+    (.fields[] | select(.name == "sample_rate")).mediainfo_path =
+      ".media.track | map(select(.\"@type\" == \"Audio\"))[0].SamplingRate" |
+    (.fields[] | select(.name == "channels")).mediainfo_path =
+      ".media.track | map(select(.\"@type\" == \"Audio\"))[0].Channels"
+  ' "$ROOT/formats/au.fields.json" >"$mi_sc"
+
+  if (PALIMPSEST_FAKE_MEDIAINFO_MODE=mismatch \
+      PALIMPSEST_MEDIAINFO_BIN="$ROOT/redteam/fake_mediainfo" \
+      check_spec "$ROOT/formats/au.ksy" "$mi_sc") \
+      >/dev/null 2>&1; then
+    echo "selftest FAIL: MediaInfo mismatch passed"
+    exit 1
+  fi
+
+  local mi_out
+  if ! mi_out="$(PALIMPSEST_FAKE_MEDIAINFO_MODE=match \
+      PALIMPSEST_MEDIAINFO_BIN="$ROOT/redteam/fake_mediainfo" \
+      check_spec "$ROOT/formats/au.ksy" "$mi_sc" 2>&1)"; then
+    echo "selftest FAIL: matching MediaInfo result failed"
+    exit 1
+  fi
+  grep -q 'mediainfo: checked 2, skipped 0 of 2 mapped field(s)' <<<"$mi_out" \
+    || { echo "selftest FAIL: matching MediaInfo summary missing"; exit 1; }
+
+  if ! mi_out="$(PALIMPSEST_FAKE_MEDIAINFO_MODE=missing \
+      PALIMPSEST_MEDIAINFO_BIN="$ROOT/redteam/fake_mediainfo" \
+      check_spec "$ROOT/formats/au.ksy" "$mi_sc" 2>&1)"; then
+    echo "selftest FAIL: absent mapped MediaInfo field was not best-effort"
+    exit 1
+  fi
+  grep -q 'mediainfo: channels unavailable (mapped field skipped)' <<<"$mi_out" \
+    || { echo "selftest FAIL: missing-field skip was not visible"; exit 1; }
+  grep -q 'mediainfo: checked 1, skipped 1 of 2 mapped field(s)' <<<"$mi_out" \
+    || { echo "selftest FAIL: partial MediaInfo summary missing"; exit 1; }
+
+  local mode
+  for mode in malformed failure nonscalar; do
+    if (PALIMPSEST_FAKE_MEDIAINFO_MODE="$mode" \
+        PALIMPSEST_MEDIAINFO_BIN="$ROOT/redteam/fake_mediainfo" \
+        check_spec "$ROOT/formats/au.ksy" "$mi_sc") \
+        >/dev/null 2>&1; then
+      echo "selftest FAIL: MediaInfo $mode result passed"
+      exit 1
+    fi
+  done
+
+  if (PALIMPSEST_MEDIAINFO_BIN="$ROOT/redteam/not-an-executable" \
+      check_spec "$ROOT/formats/au.ksy" "$mi_sc") \
+      >/dev/null 2>&1; then
+    echo "selftest FAIL: unusable MediaInfo override passed"
+    exit 1
+  fi
+
+  local absent_status=0
+  PATH=/nonexistent resolve_mediainfo >/dev/null 2>&1 || absent_status=$?
+  [ "$absent_status" -eq 1 ] \
+    || { echo "selftest FAIL: absent MediaInfo was not optional"; exit 1; }
+
+  echo "selftest GREEN: toy machinery, sidecar boundary, both oracle paths, and all red-team cases hold"
 }
 
 case "${1:-}" in
