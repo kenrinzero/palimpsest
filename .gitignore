@@ -2,5 +2,6 @@
 __pycache__/
 *.pyc
 build/
+.worktrees/
 # non-redistributable head-format sample cache (refetchable via manifests)
 samples/_staged/
