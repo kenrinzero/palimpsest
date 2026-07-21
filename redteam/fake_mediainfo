@@ -5,6 +5,10 @@ set -euo pipefail
 [ "${2:-}" = "--File_TestContinuousFileNames=0" ] || exit 64
 [ "$#" -eq 3 ] || exit 64
 
+if [ -n "${PALIMPSEST_FAKE_MEDIAINFO_COUNT_FILE:-}" ]; then
+  printf '1\n' >>"$PALIMPSEST_FAKE_MEDIAINFO_COUNT_FILE"
+fi
+
 case "${PALIMPSEST_FAKE_MEDIAINFO_MODE:-match}" in
   match)
     printf '%s\n' '{"media":{"track":[{"@type":"Audio","SamplingRate":"8000","Channels":"1"}]}}'
@@ -17,6 +21,11 @@ case "${PALIMPSEST_FAKE_MEDIAINFO_MODE:-match}" in
     ;;
   malformed)
     printf '%s\n' '{broken'
+    ;;
+  multiple)
+    printf '%s\n' \
+      '{"media":{"track":[{"@type":"Audio","SamplingRate":"8000","Channels":"1"}]}}' \
+      '{"media":{"track":[{"@type":"Audio","SamplingRate":"8000","Channels":"1"}]}}'
     ;;
   failure)
     exit 23

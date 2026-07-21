@@ -73,6 +73,7 @@ validate_sidecar() {
 
 json_scalar() { # <json-document> <jq-path>
   local document="$1" path="$2" values count value_kind value
+  jq -se 'length == 1' <<<"$document" >/dev/null 2>&1 || return 2
   values="$(jq -cer "[${path}]" <<<"$document" 2>/dev/null)" || return 2
   count="$(jq -r 'length' <<<"$values")" || return 2
   [ "$count" -gt 0 ] || return 1
@@ -210,6 +211,15 @@ expect_sidecar_rejected() { # <sidecar> <description>
   fi
 }
 
+expect_json_scalar_status() { # <status> <json-document> <jq-path> <description>
+  local expected="$1" document="$2" path="$3" description="$4" actual=0
+  json_scalar "$document" "$path" >/dev/null 2>&1 || actual=$?
+  [ "$actual" -eq "$expected" ] || {
+    echo "selftest FAIL: $description returned status $actual, expected $expected"
+    exit 1
+  }
+}
+
 selftest() {
   SELFTEST_TMP="$(mktemp -d)"
   case "$SELFTEST_TMP" in
@@ -333,6 +343,12 @@ selftest() {
   if json_scalar '{broken' '.value' >/dev/null 2>&1; then
     echo "selftest FAIL: malformed JSON accepted"; exit 1
   fi
+  expect_json_scalar_status 1 '{}' '.missing' "absent scalar"
+  expect_json_scalar_status 2 '{"value":[]}' '.value' "non-scalar value"
+  expect_json_scalar_status 2 '' '.value' "empty JSON document stream"
+  expect_json_scalar_status 2 $'{"value":1}\n{"value":2}' '.value' \
+    "multiple top-level JSON documents"
+  expect_json_scalar_status 2 '{broken' '.value' "malformed JSON document"
   numeric_equal "8000" "8000.0" \
     || { echo "selftest FAIL: numeric normalization rejected equality"; exit 1; }
   if numeric_equal "8000" "7999"; then
@@ -375,8 +391,10 @@ selftest() {
     exit 1
   fi
 
-  local mi_out
+  local mi_out mi_count_file="$SELFTEST_TMP/mediainfo-invocations" mi_count
+  : >"$mi_count_file"
   if ! mi_out="$(PALIMPSEST_FAKE_MEDIAINFO_MODE=match \
+      PALIMPSEST_FAKE_MEDIAINFO_COUNT_FILE="$mi_count_file" \
       PALIMPSEST_MEDIAINFO_BIN="$ROOT/redteam/fake_mediainfo" \
       check_spec "$ROOT/formats/au.ksy" "$mi_sc" 2>&1)"; then
     echo "selftest FAIL: matching MediaInfo result failed"
@@ -384,6 +402,9 @@ selftest() {
   fi
   grep -q 'mediainfo: checked 2, skipped 0 of 2 mapped field(s)' <<<"$mi_out" \
     || { echo "selftest FAIL: matching MediaInfo summary missing"; exit 1; }
+  mi_count="$(wc -l <"$mi_count_file")"
+  [ "$mi_count" -eq 1 ] \
+    || { echo "selftest FAIL: MediaInfo invoked $mi_count times, expected 1"; exit 1; }
 
   if ! mi_out="$(PALIMPSEST_FAKE_MEDIAINFO_MODE=missing \
       PALIMPSEST_MEDIAINFO_BIN="$ROOT/redteam/fake_mediainfo" \
@@ -406,6 +427,14 @@ selftest() {
       exit 1
     fi
   done
+
+  if (PALIMPSEST_FAKE_MEDIAINFO_MODE=multiple \
+      PALIMPSEST_MEDIAINFO_BIN="$ROOT/redteam/fake_mediainfo" \
+      check_spec "$ROOT/formats/au.ksy" "$mi_sc") \
+      >/dev/null 2>&1; then
+    echo "selftest FAIL: multiple top-level MediaInfo JSON documents passed"
+    exit 1
+  fi
 
   if (PALIMPSEST_MEDIAINFO_BIN="$ROOT/redteam/not-an-executable" \
       check_spec "$ROOT/formats/au.ksy" "$mi_sc") \
