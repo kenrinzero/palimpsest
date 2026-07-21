@@ -1,0 +1,14 @@
+{
+  "sample": "samples/_staged/bink/RazOnBull.bik",
+  "independence": "third-party",
+  "fields": [
+    { "name": "width", "kaitai_path": "width", "ffprobe_path": ".streams[0].width", "kind": "numeric" },
+    { "name": "height", "kaitai_path": "height", "ffprobe_path": ".streams[0].height", "kind": "numeric" },
+    { "name": "file_size", "kaitai_path": "file_size", "ffprobe_path": ".format.size", "kind": "numeric" },
+    { "name": "fps_num", "kaitai_path": "fps_num", "ffprobe_path": "(.streams[0].r_frame_rate | split(\"/\") | .[0])", "kind": "numeric" },
+    { "name": "fps_den", "kaitai_path": "fps_den", "ffprobe_path": "(.streams[0].r_frame_rate | split(\"/\") | .[1])", "kind": "numeric" },
+    { "name": "audio_tracks", "kaitai_path": "num_audio_tracks", "ffprobe_path": "([.streams[] | select(.codec_type == \"audio\")] | length)", "kind": "numeric" },
+    { "name": "video_codec", "kaitai_path": "codec_label", "ffprobe_path": ".streams[0].codec_name", "kind": "label" }
+  ],
+  "self_checked": []
+}

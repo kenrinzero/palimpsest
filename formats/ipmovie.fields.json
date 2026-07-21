@@ -1,0 +1,10 @@
+{
+  "sample": "samples/_staged/ipmovie/descent3-level5-16bit-partial.mve",
+  "independence": "third-party",
+  "fields": [
+    { "name": "width", "kaitai_path": "video_width", "ffprobe_path": ".streams[0].width", "kind": "numeric" },
+    { "name": "height", "kaitai_path": "video_height", "ffprobe_path": ".streams[0].height", "kind": "numeric" },
+    { "name": "video_codec", "kaitai_path": "codec_label", "ffprobe_path": ".streams[0].codec_name", "kind": "label" }
+  ],
+  "self_checked": []
+}

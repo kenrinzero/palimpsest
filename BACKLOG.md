@@ -17,9 +17,9 @@ starter samples generated + sidecars authored.
 
 | unit | tier | gallery | notes |
 |---|---|---|---|
-| S1 `au` | T3 | improving (gallery has `au` — our contribution is the conformance gate) | 24-byte BE header. Sidecar expects `sample_rate`/`channels` numeric + `codec_name` label via a `codec_label` instance (map encoding 3 → `pcm_s16be`). The wrong-offset red-team fixture is the anti-model: read the REAL offsets. |
-| S2 `voc` | T3 | improving | 26-byte magic + version, block-chained body; sidecar expects first-block rate/channels (`first_block_sample_rate`/`first_block_channels` instances) + `codec_label` (`pcm_u8` for the default first block — verify against the sample with ffprobe, not from memory). |
-| S3 `roq` | T3 | **net-new** (first video unit; exercises the chunk-walk the head formats reuse) | Signature `0x1084`, chunk stream, `RoQ_QUAD_INFO` carrying width/height (`quad_info.width`/`.height` instances). |
+| S1 `au` | T3 | improving | **DONE 2026-07-19** (Reasonix), reconciled 2026-07-21 (Codex). Complete 24-byte BE header; pinned FFmpeg 6.1.1 encoding map; sample-rate, channels, and codec oracles GREEN. |
+| S2 `voc` | T3 | improving | **DONE 2026-07-19** (Reasonix), reconciled 2026-07-21 (Codex). Validated 26-byte header plus a bounded type-9 first block; sample-rate, channels, and codec oracles GREEN. Legacy type-1 and full block traversal remain depth work. |
+| S3 `roq` | T3 | **net-new** | **DONE 2026-07-19** (Reasonix), reconciled 2026-07-21 (Codex). Validated 8-byte header and bounded chunk walk through the first QUAD_INFO, including valid sound-before-info order; dimensions, frame rate, and codec oracles GREEN. |
 
 ## Tier 2 — oracle/self-checked boundary hardening (T2 harness unit)
 
@@ -27,26 +27,27 @@ Enforce the `self_checked` vocabulary (chunk-size-sum == file length,
 monotonic offsets, declared-count == walked-count); wire `mediainfo`
 cross-checking if/when installed (best-effort — DESIGN § 4).
 
-## Tier 3 — decode-only head sample staging — ALL STAGED 2026-07-17
+## Tier 3 — decode-only head sample staging — DONE 2026-07-17
 
 FATE-suite bytes (no clear license → gitignored `samples/_staged/`,
 refetch via `harness/stage_heads.py`, sha256-pinned; provenance + probe
 values in `samples/SOURCES.md`). If `_staged/` is missing, run the script
-once before dispatching a head unit. All five head units below are now
-dispatchable (Tier 4).
+once before checking a head unit. All five staged head units below are now
+implemented and GREEN.
 
 | format | sample | provenance rule |
 |---|---|---|
-| smk (Smacker) | **STAGED** `_staged/smk/wetlogo.smk` | FATE `smacker/wetlogo.smk`; not license-clean → gitignored cache + manifest (DESIGN § 6) |
-| bink | **STAGED** `_staged/bink/RazOnBull.bik` | FATE `bink/RazOnBull.bik`; same |
-| wsvqa (Westwood VQA) | **STAGED** `_staged/wsvqa/small-cut-v3.vqa` | FATE `vqa/small-cut-v3.vqa`; same |
-| ipmovie (Interplay MVE) | **STAGED** `_staged/ipmovie/descent3-level5-16bit-partial.mve` | FATE `interplay-mve/…-partial.mve`; same |
-| flic (FLIC/FLC) | **STAGED** `_staged/flic/jj00c2.fli` | FATE `fli/jj00c2.fli`; same (video-only sample — sidecar oracle = width/height/fps) |
+| smk (Smacker) | **DONE 2026-07-19** (Reasonix), reconciled 2026-07-21 (Codex) | BOUNDED FIXED HEADER: 104 bytes; 320×200, signed timing, smackvideo, GREEN |
+| bink | **DONE 2026-07-19** (Reasonix), reconciled 2026-07-21 (Codex) | COMPLETE BASE HEADER: 44 bytes; 640×480, size/FPS/audio-count, binkvideo, GREEN |
+| wsvqa (Westwood VQA) | **DONE 2026-07-19** (Reasonix), reconciled 2026-07-21 (Codex) | COMPLETE VQHD: 42-byte mixed-BE/LE header; dimensions/frame/audio fields, ws_vqa, GREEN |
+| ipmovie (Interplay MVE) | **DONE 2026-07-19** (Reasonix), reconciled 2026-07-21 (Codex) | BOUNDED OPCODE WALK: first INIT_VIDEO chunk through INIT_VIDEO_BUFFERS; 640×320 (stored/8 → ×8), interplayvideo, GREEN |
+| flic (FLIC/FLC) | **DONE 2026-07-19** (Reasonix), reconciled 2026-07-21 (Codex) | BOUNDED FIXED HEADER: 128 bytes; 640×480 plus FLC timing oracle, flic, GREEN. Eight implemented specs now pass (3 self-generated + 5 third-party). |
 
-## Tier 4 — breadth (after starters green)
+## Tier 4 — breadth — IN PROGRESS
 
-aiff, dpx (via image2), then the staged head formats — each a header unit
-with ≥1 numeric oracle field, independence regime tagged.
+The five staged head formats are complete. `aiff` and `dpx` (via image2)
+remain as breadth units; each needs a header spec, at least one numeric
+oracle field, and an explicit independence regime.
 
 ## Tier 5 — depth + novel RE (routed sparingly, T1, three-attempt cap)
 

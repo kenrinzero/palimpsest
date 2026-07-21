@@ -4,6 +4,7 @@
   "fields": [
     { "name": "width", "kaitai_path": "quad_info.width", "ffprobe_path": ".streams[0].width", "kind": "numeric" },
     { "name": "height", "kaitai_path": "quad_info.height", "ffprobe_path": ".streams[0].height", "kind": "numeric" },
+    { "name": "frame_rate", "kaitai_path": "frame_rate", "ffprobe_path": "(.streams[0].r_frame_rate | split(\"/\") | .[0])", "kind": "numeric" },
     { "name": "codec_name", "kaitai_path": "codec_label", "ffprobe_path": ".streams[0].codec_name", "kind": "label" }
   ],
   "self_checked": []

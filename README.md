@@ -10,13 +10,15 @@ offset-sensitive field must match the oracle.
 
 ## Status
 
-Stage-0 seed (2026-07-07): pinned portable toolchain (Temurin 21.0.11 +
-ksc 0.11 at `~/opt/kaitai`, re-creatable via `toolchain/provision.sh`),
-generic harness live, **all four red-team cases proven** (wrong-offset
-spec, compile failure, empty oracle map, label-only map — each drives
-`check.sh` red), starter samples generated with sidecars authored.
-**No real `.ksy` specs yet** — S1 (`au`) is the first floor unit
-(`BACKLOG.md`).
+Eight specs are implemented and differential-GREEN as of 2026-07-21:
+AU, VOC, RoQ, Smacker, Bink, Westwood VQA, Interplay MVE, and FLIC/FLC.
+The three self-generated tail samples and five hash-pinned third-party
+head samples all match `ffprobe` on numeric, offset-sensitive fields; the
+parsers also validate format identities and bound fixed headers and chunk
+payloads. DPX and the additional AIFF breadth unit remain pending.
+
+The Stage-0 harness remains pinned to Temurin 21.0.11 and Kaitai compiler
+0.11, with all four red-team cases proven to drive `check.sh` red.
 
 ## How a unit works
 

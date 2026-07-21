@@ -1,0 +1,11 @@
+{
+  "sample": "samples/_staged/flic/jj00c2.fli",
+  "independence": "third-party",
+  "fields": [
+    { "name": "width", "kaitai_path": "width", "ffprobe_path": ".streams[0].width", "kind": "numeric" },
+    { "name": "height", "kaitai_path": "height", "ffprobe_path": ".streams[0].height", "kind": "numeric" },
+    { "name": "frame_delay_msec", "kaitai_path": "frame_delay_msec", "ffprobe_path": "(.streams[0].r_frame_rate | split(\"/\") | (1000 * (.[1] | tonumber) / (.[0] | tonumber)) | round)", "kind": "numeric" },
+    { "name": "codec_name", "kaitai_path": "codec_label", "ffprobe_path": ".streams[0].codec_name", "kind": "label" }
+  ],
+  "self_checked": []
+}

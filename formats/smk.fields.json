@@ -1,0 +1,11 @@
+{
+  "sample": "samples/_staged/smk/wetlogo.smk",
+  "independence": "third-party",
+  "fields": [
+    { "name": "width", "kaitai_path": "width", "ffprobe_path": ".streams[0].width", "kind": "numeric" },
+    { "name": "height", "kaitai_path": "height", "ffprobe_path": ".streams[0].height", "kind": "numeric" },
+    { "name": "frame_duration_units", "kaitai_path": "frame_duration_units", "ffprobe_path": "(.streams[0].r_frame_rate | split(\"/\") | (100000 * (.[1] | tonumber) / (.[0] | tonumber)) | round)", "kind": "numeric" },
+    { "name": "video_codec", "kaitai_path": "codec_label", "ffprobe_path": ".streams[0].codec_name", "kind": "label" }
+  ],
+  "self_checked": []
+}
