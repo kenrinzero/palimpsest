@@ -7,5 +7,5 @@
     { "name": "frame_rate", "kaitai_path": "frame_rate", "ffprobe_path": "(.streams[0].r_frame_rate | split(\"/\") | .[0])", "kind": "numeric" },
     { "name": "codec_name", "kaitai_path": "codec_label", "ffprobe_path": ".streams[0].codec_name", "kind": "label" }
   ],
-  "self_checked": []
+  "self_checked": ["chunk-size-sum == file length"]
 }
