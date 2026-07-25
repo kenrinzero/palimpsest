@@ -63,8 +63,8 @@ explicitly labelled (recorded, not oracle-backed).
 | format | result | depth claim |
 |---|---|---|
 | smk | **DONE 2026-07-25** (Grok) | Structured 104-byte header remainder (7 audio-size slots, treesize + four Huffman sizes, 7× rate/flags tracks, pad) plus per-frame size and type tables sized by `total_frames`. Audio oracles GREEN: sample_rate 22050, channels 1, smackaudio. Frame count GREEN vs `duration_ts`. self_checked: `declared-count == walked-count`. |
+| ipmovie | **DONE 2026-07-25** (Grok) | Second-chunk INIT_AUDIO (0x0000) walk through INIT_AUDIO_BUFFERS (0x03); FFmpeg-aligned flags → channels/bit-depth/DPCM and sample_rate at payload +4. Audio oracles GREEN: 44100 Hz, 2 ch, interplay_dpcm. Video path unchanged. |
 | flic | open | Delta-chunk / frame-chunk opcodes after the 128-byte header. |
 | wsvqa | open | Codebook / post-VQHD IFF chunk walk. |
-| ipmovie | open | Full chunk/opcode stream beyond first INIT_VIDEO_BUFFERS. |
 | roq | open | Post-QUAD_INFO chunk stream (codebooks, sound). |
 | aiff | open | Optional undersized-FORM validation; 80-bit extended sample-rate decode. |
