@@ -11,6 +11,10 @@ doc: |
   plus a derived `codec_label` instance that maps the encoding integer
   to ffprobe's `codec_name` string.
 
+  Malformed-input hardening (2026-07-25): `data_offset` must be at least
+  24 (end of the fixed header); `sample_rate` and `channels` must be
+  non-zero.  `redteam/au_short_offset.bin` is proven red by selftest.
+
   Gallery status: gallery-improving — an `au` entry already exists at
   formats.kaitai.io; this one adds the differential-gate oracle.
 
@@ -19,7 +23,9 @@ seq:
     contents: '.snd'
   - id: data_offset
     type: u4
-    doc: Byte offset to start of audio data (minimum 24).
+    valid:
+      min: 24
+    doc: Byte offset to start of audio data (minimum 24 = end of fixed header).
   - id: data_size
     type: u4
     doc: Size of audio data in bytes, or 0xFFFFFFFF for unknown.
@@ -33,10 +39,14 @@ seq:
       24 = G.722, 27 = A-law.
   - id: sample_rate
     type: u4
-    doc: Samples per second.
+    valid:
+      min: 1
+    doc: Samples per second (must be non-zero).
   - id: channels
     type: u4
-    doc: Number of interleaved audio channels.
+    valid:
+      min: 1
+    doc: Number of interleaved audio channels (must be non-zero).
 instances:
   codec_label:
     value: >

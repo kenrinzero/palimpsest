@@ -97,7 +97,8 @@ non-zero exit on any required-oracle or available-second-oracle mismatch.
 
 `check.sh --selftest` drives the original four red-team cases, the toy
 compile/parse smoke, strict sidecar-vocabulary cases, the null-oracle
-anti-model, and deterministic optional-MediaInfo match/skip/failure cases.
+anti-model, deterministic optional-MediaInfo match/skip/failure cases,
+and malformed-input fixtures (undersized AIFF FORM, AU short offset).
 Run it after any harness change.
 
 ## 4. Independence regimes (settled tagging)
@@ -128,6 +129,15 @@ four cases: malformed sidecars and unknown self-check claims are rejected, a
 missing FFprobe path cannot pass as the literal label `null`, and fake
 MediaInfo output proves matching, partial-support, mismatch, malformed,
 non-scalar, command-failure, and bad-override behavior.
+
+Malformed-input hardening (2026-07-25): selected specs carry explicit
+`valid` floors so truncated or lying size fields fail at parse time —
+AIFF `form_size` ≥ 46 (form type + COMM + minimal SSND), classic COMM
+payload length 18, SSND payload ≥ 8; AU `data_offset` ≥ 24 with non-zero
+rate/channels. Fixtures under `redteam/aiff_undersized_form.bin`,
+`redteam/aiff_form_too_small_for_ssnd.bin`, and
+`redteam/au_short_offset.bin` are proven red by `./check.sh --selftest`
+section 9/9.
 
 The full GREEN differential path is completed by starter unit S1's correct
 `au.ksy` (deliberately left to the floor — the wrong-offset red proves the

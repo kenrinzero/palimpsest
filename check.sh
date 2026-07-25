@@ -228,7 +228,7 @@ selftest() {
   esac
   trap 'rm -rf -- "$SELFTEST_TMP"' EXIT
 
-  echo "selftest 1/8: toy compile + parse via pinned toolchain"
+  echo "selftest 1/9: toy compile + parse via pinned toolchain"
   mkdir -p "$ROOT/build"
   "$KSC" --target python --outdir "$ROOT/build" "$ROOT/redteam/toy.ksy"
   local out
@@ -236,23 +236,23 @@ selftest() {
         redteam/toy.bin redteam/toy.fields.json)"
   echo "$out" | grep -q "^width=64$" || { echo "selftest FAIL: toy parse"; exit 1; }
 
-  echo "selftest 2/8: red-team (b) — compile failure must bite"
+  echo "selftest 2/9: red-team (b) — compile failure must bite"
   if "$KSC" --target python --outdir "$ROOT/build" "$ROOT/redteam/toy_compilefail.ksy" \
       >/dev/null 2>&1; then
     echo "selftest FAIL: broken .ksy compiled"; exit 1
   fi
 
-  echo "selftest 3/8: red-team (c) — empty oracle map must be rejected"
+  echo "selftest 3/9: red-team (c) — empty oracle map must be rejected"
   if (validate_sidecar "$ROOT/redteam/empty.fields.json") 2>/dev/null; then
     echo "selftest FAIL: empty map accepted"; exit 1
   fi
 
-  echo "selftest 4/8: red-team (d) — label-only map must be rejected"
+  echo "selftest 4/9: red-team (d) — label-only map must be rejected"
   if (validate_sidecar "$ROOT/redteam/labelonly.fields.json") 2>/dev/null; then
     echo "selftest FAIL: label-only map accepted"; exit 1
   fi
 
-  echo "selftest 5/8: Tier-2 sidecar and self_checked vocabulary"
+  echo "selftest 5/9: Tier-2 sidecar and self_checked vocabulary"
   local sc
   sc="$(make_sidecar_variant canonical \
     '.self_checked = [
@@ -310,13 +310,13 @@ selftest() {
   sc="$(make_sidecar_variant empty_name '.fields[0].name = ""')"
   expect_sidecar_rejected "$sc" "empty field name"
 
-  echo "selftest 6/8: red-team (a) — wrong-offset spec must go RED on the differential"
+  echo "selftest 6/9: red-team (a) — wrong-offset spec must go RED on the differential"
   if (check_spec "$ROOT/redteam/au_wrong_offset.ksy" \
         "$ROOT/redteam/au_wrong_offset.fields.json") >/dev/null 2>&1; then
     echo "selftest FAIL: wrong-offset spec passed the differential"; exit 1
   fi
 
-  echo "selftest 7/8: undecidable oracle values must not pass"
+  echo "selftest 7/9: undecidable oracle values must not pass"
   if (check_spec "$ROOT/redteam/au_null_oracle.ksy" \
         "$ROOT/redteam/au_null_oracle.fields.json") >/dev/null 2>&1; then
     echo "selftest FAIL: missing FFprobe value passed as literal null"
@@ -355,7 +355,7 @@ selftest() {
     echo "selftest FAIL: unequal numerics accepted"; exit 1
   fi
 
-  echo "selftest 8/8: optional MediaInfo cross-checking"
+  echo "selftest 8/9: optional MediaInfo cross-checking"
   sc="$(make_sidecar_variant label_mediainfo '
     .fields += [{
       "name": "label_with_second_oracle",
@@ -448,7 +448,38 @@ selftest() {
   [ "$absent_status" -eq 1 ] \
     || { echo "selftest FAIL: absent MediaInfo was not optional"; exit 1; }
 
-  echo "selftest GREEN: toy machinery, sidecar boundary, both oracle paths, and all red-team cases hold"
+  echo "selftest 9/9: malformed-input hardening must reject bad containers"
+  # Compile the hardened specs (formats used by the fixtures below).
+  "$KSC" --target python --outdir "$ROOT/build" "$ROOT/formats/aiff.ksy" \
+    || { echo "selftest FAIL: aiff compile for malformed-input"; exit 1; }
+  "$KSC" --target python --outdir "$ROOT/build" "$ROOT/formats/au.ksy" \
+    || { echo "selftest FAIL: au compile for malformed-input"; exit 1; }
+
+  # Undersized AIFF FORM size field (20 < min 46) must fail validation.
+  if (cd "$ROOT" && uv run python harness/extract.py build aiff \
+        redteam/aiff_undersized_form.bin formats/aiff.fields.json) \
+      >/dev/null 2>&1; then
+    echo "selftest FAIL: undersized AIFF FORM accepted"
+    exit 1
+  fi
+
+  # FORM large enough for COMM alone but too small for COMM+SSND (40 < 46).
+  if (cd "$ROOT" && uv run python harness/extract.py build aiff \
+        redteam/aiff_form_too_small_for_ssnd.bin formats/aiff.fields.json) \
+      >/dev/null 2>&1; then
+    echo "selftest FAIL: AIFF FORM too small for SSND walk accepted"
+    exit 1
+  fi
+
+  # AU data_offset below the 24-byte fixed header must fail validation.
+  if (cd "$ROOT" && uv run python harness/extract.py build au \
+        redteam/au_short_offset.bin formats/au.fields.json) \
+      >/dev/null 2>&1; then
+    echo "selftest FAIL: AU short data_offset accepted"
+    exit 1
+  fi
+
+  echo "selftest GREEN: toy machinery, sidecar boundary, both oracle paths, red-team cases, and malformed-input hardening hold"
 }
 
 case "${1:-}" in

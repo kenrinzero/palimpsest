@@ -27,6 +27,13 @@ doc: |
   top-level FORM file, `form_size + 8` equals the file length
   (recorded under self_checked as chunk-size-sum == file length).
 
+  Malformed-input hardening (2026-07-25): `form_size` must be large
+  enough to hold form type + a full COMM (26 bytes) + a minimal SSND
+  header (16 bytes) ⇒ minimum 46.  COMM payloads must be exactly 18
+  bytes (classic AIFF); SSND payloads must be at least 8 bytes
+  (offset + block_size).  Undersized FORM fixtures in `redteam/` are
+  proven red by `./check.sh --selftest`.
+
   Proven against ffprobe 6.1.1-3ubuntu5 on the deterministic
   self-generated 80-frame, 8 kHz mono pcm_s16be sample.  Independence:
   self-generated.  Gallery: **net-new**.
@@ -37,7 +44,13 @@ seq:
     doc: IFF container identifier.
   - id: form_size
     type: u4
-    doc: Bytes after this field, including the four-byte form type.
+    valid:
+      min: 46
+    doc: |
+      Bytes after this field, including the four-byte form type.
+      Minimum 46 = AIFF(4) + COMM(8+18) + SSND(8+8) so this depth unit
+      can complete both chunk walks.  Undersized values fail validation
+      before any chunk parse (see redteam/aiff_undersized_form.bin).
   - id: form_type
     contents: 'AIFF'
     doc: Uncompressed AIFF form type; AIFC is intentionally rejected.
@@ -69,7 +82,15 @@ types:
         doc: Four-character IFF chunk identifier.
       - id: len_body
         type: u4
-        doc: Chunk payload size, excluding this eight-byte header and padding.
+        valid:
+          expr: |
+            (chunk_id == "COMM" and _ == 18) or
+            (chunk_id == "SSND" and _ >= 8) or
+            (chunk_id != "COMM" and chunk_id != "SSND")
+        doc: |
+          Chunk payload size, excluding this eight-byte header and padding.
+          Classic AIFF COMM is always 18 bytes; SSND must cover offset and
+          block_size (at least 8).  Other chunks are unconstrained here.
       - id: body
         size: len_body
         type: chunk_body

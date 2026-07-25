@@ -55,6 +55,12 @@ units are complete.
 | aiff | **DONE 2026-07-21** (Codex) | **Net-new**; self-generated 80-frame PCM sample; bounded FORM/chunk walk through COMM; channels, sample frames, and bits/sample GREEN. |
 | dpx | **DONE 2026-07-21** (Codex) | **Net-new**; self-generated image2/DPX sample; endian selected from SDPX/XPDS; width and height at the standard image-information offsets GREEN. |
 
+## Malformed-input hardening — DONE 2026-07-25 (Grok)
+
+Explicit `valid` floors on AIFF FORM/COMM/SSND sizes and AU data_offset /
+rate / channels. Three redteam fixtures bite under selftest 9/9; good
+samples remain differential-GREEN. Harness selftest renumbered 8→9.
+
 ## Tier 5 — depth + novel RE (routed sparingly, T1, three-attempt cap)
 
 Only on formats whose header already passes; self-checked depth fields

@@ -24,7 +24,9 @@ Tier 5 depth (2026-07-25) is complete for the planned set: **Smacker**
 **Westwood VQA** (IFF through FINF), and **RoQ** (full chunk stream).
 
 The Stage-0 harness remains pinned to Temurin 21.0.11 and Kaitai compiler
-0.11, with all four red-team cases proven to drive `check.sh` red.
+0.11, with all four original red-team cases plus malformed-input fixtures
+(undersized AIFF FORM, AU short data_offset) proven to drive `check.sh`
+red under `--selftest` (9/9).
 
 ## How a unit works
 
