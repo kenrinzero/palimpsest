@@ -4,7 +4,9 @@
   "fields": [
     { "name": "channels", "kaitai_path": "common.num_channels", "ffprobe_path": ".streams[0].channels", "mediainfo_path": ".media.track | map(select(.\"@type\" == \"Audio\"))[0].Channels", "kind": "numeric" },
     { "name": "sample_frames", "kaitai_path": "common.num_sample_frames", "ffprobe_path": ".streams[0].nb_frames", "kind": "numeric" },
-    { "name": "bits_per_sample", "kaitai_path": "common.sample_size", "ffprobe_path": ".streams[0].bits_per_sample", "mediainfo_path": ".media.track | map(select(.\"@type\" == \"Audio\"))[0].BitDepth", "kind": "numeric" }
+    { "name": "bits_per_sample", "kaitai_path": "common.sample_size", "ffprobe_path": ".streams[0].bits_per_sample", "mediainfo_path": ".media.track | map(select(.\"@type\" == \"Audio\"))[0].BitDepth", "kind": "numeric" },
+    { "name": "sample_rate", "kaitai_path": "sample_rate", "ffprobe_path": ".streams[0].sample_rate", "mediainfo_path": ".media.track | map(select(.\"@type\" == \"Audio\"))[0].SamplingRate", "kind": "numeric" },
+    { "name": "codec_name", "kaitai_path": "codec_label", "ffprobe_path": ".streams[0].codec_name", "kind": "label" }
   ],
-  "self_checked": []
+  "self_checked": ["chunk-size-sum == file length"]
 }

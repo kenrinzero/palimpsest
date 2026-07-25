@@ -18,11 +18,9 @@ third-party samples all match `ffprobe` on numeric, offset-sensitive
 fields; the parsers also validate format identities and bound fixed
 headers and chunk payloads. Tier 4 breadth is complete.
 
-Tier 5 depth began 2026-07-25: **Smacker** walks audio-track
-descriptors and per-frame size/type tables (audio rate/channels/codec
-plus frame count). **Interplay MVE** walks the INIT_AUDIO chunk through
-INIT_AUDIO_BUFFERS and matches primary audio sample rate, channels, and
-codec.
+Tier 5 depth (2026-07-25): **Smacker** — audio tracks + frame tables;
+**Interplay MVE** — INIT_AUDIO_BUFFERS audio params; **AIFF** — IEEE
+80-bit extended sample-rate decode, SSND walk, and codec label.
 
 The Stage-0 harness remains pinned to Temurin 21.0.11 and Kaitai compiler
 0.11, with all four red-team cases proven to drive `check.sh` red.

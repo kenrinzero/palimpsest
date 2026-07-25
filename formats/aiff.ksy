@@ -1,20 +1,35 @@
 meta:
   id: aiff
-  title: Audio Interchange File Format (AIFF) common header
+  title: Audio Interchange File Format (AIFF) header depth
   endian: be
 doc: |
-  Uncompressed Audio Interchange File Format (AIFF) container header.
+  Uncompressed Audio Interchange File Format (AIFF) — depth unit.
 
-  The outer IFF FORM is identified as AIFF and bounds a sequence of
-  size-delimited chunks.  This breadth unit walks through the first COMM
-  chunk, including even-byte chunk padding, and exposes its channel count,
-  sample-frame count, and sample size.  Parsing beyond the first COMM and
-  decoding the 80-bit extended sample rate are deferred to depth work.
+  The outer IFF FORM is identified as AIFF (AIFC rejected) and bounds a
+  sequence of size-delimited chunks with even-byte padding.  This unit:
 
-  Proven against ffprobe 6.1.1-3ubuntu5 on a deterministic, self-generated
-  80-frame, 8 kHz mono pcm_s16be sample.  Independence regime:
-  self-generated (independent of this spec, but not of FFmpeg).  Gallery
-  status: **net-new** — the live Kaitai gallery has no AIFF entry.
+  * walks chunks through the first COMM (Common) chunk
+  * continues the walk through the first SSND (Sound Data) chunk
+  * decodes the COMM sample rate from IEEE 80-bit extended floating
+    point into an integer Hz value for positive, finite, normalized
+    rates whose unbiased exponent is in 0..63 (covers standard audio
+    rates including the self-generated 8000 Hz fixture)
+
+  Extended-float decode (Apple SANE / IEEE 754 extended layout):
+
+  * bits 0–14 of the first u2: biased exponent (bias 16383)
+  * bit 15: sign
+  * following u8: significand with explicit integer bit
+  * integer Hz = mantissa >> (63 - (exp - 16383)) when the conditions
+    above hold
+
+  FORM size is the IFF byte count after the size field; for a single
+  top-level FORM file, `form_size + 8` equals the file length
+  (recorded under self_checked as chunk-size-sum == file length).
+
+  Proven against ffprobe 6.1.1-3ubuntu5 on the deterministic
+  self-generated 80-frame, 8 kHz mono pcm_s16be sample.  Independence:
+  self-generated.  Gallery: **net-new**.
 
 seq:
   - id: form_tag
@@ -39,6 +54,11 @@ types:
         repeat: until
         repeat-until: _.chunk_id == "COMM"
         doc: Size-bounded chunks through the first Common Chunk.
+      - id: chunks_through_sound
+        type: chunk
+        repeat: until
+        repeat-until: _.chunk_id == "SSND"
+        doc: Continuing walk through the first Sound Data Chunk.
 
   chunk:
     seq:
@@ -63,10 +83,13 @@ types:
       - id: common
         type: common_chunk
         if: _parent.chunk_id == "COMM"
+      - id: sound
+        type: sound_data_chunk
+        if: _parent.chunk_id == "SSND"
       - id: uninterpreted
         size-eos: true
-        if: _parent.chunk_id != "COMM"
-        doc: Chunks preceding COMM are retained but not interpreted.
+        if: (_parent.chunk_id != "COMM") and (_parent.chunk_id != "SSND")
+        doc: Chunks outside COMM/SSND are retained but not interpreted.
 
   common_chunk:
     seq:
@@ -80,10 +103,84 @@ types:
         type: u2
         doc: Number of bits in each sample point.
       - id: sample_rate_extended
-        size: 10
-        doc: Sample rate encoded as an IEEE 80-bit extended floating-point value.
+        type: extended80
+        doc: Sample rate as IEEE 80-bit extended floating-point.
+
+  sound_data_chunk:
+    doc: |
+      SSND chunk: offset and block-size leading words, then the PCM
+      sample frames.  Offset/block-size are usually zero for simple
+      files; sample bytes remain uninterpreted beyond their declared
+      length.
+    seq:
+      - id: offset
+        type: u4
+        doc: Bytes to skip before the first sample frame (usually 0).
+      - id: block_size
+        type: u4
+        doc: Block-alignment size for the sound data (usually 0).
+      - id: sound_data
+        size-eos: true
+        doc: Raw PCM sample frames (AIFF big-endian integer PCM).
+
+  extended80:
+    doc: |
+      IEEE 754 80-bit extended (Apple SANE) floating-point value used
+      by AIFF for sample rate.  Only the positive integer-Hz decode path
+      is exposed for differential checking.
+    seq:
+      - id: sign_exp
+        type: u2
+        doc: Sign bit (MSB) plus 15-bit biased exponent.
+      - id: mantissa
+        type: u8
+        doc: 64-bit significand with explicit integer bit in the MSB.
+    instances:
+      sign:
+        value: sign_exp >> 15
+        doc: 0 = positive, 1 = negative.
+      raw_exp:
+        value: sign_exp & 0x7fff
+        doc: Biased exponent field (bias 16383; 0 and 0x7FFF are special).
+      unbiased_exp:
+        value: raw_exp - 16383
+        doc: Unbiased power-of-two exponent for normal numbers.
+      as_hz:
+        value: mantissa >> (63 - unbiased_exp)
+        if: (sign == 0) and (raw_exp != 0) and (raw_exp != 0x7fff) and (unbiased_exp >= 0) and (unbiased_exp <= 63)
+        doc: |
+          Integer sample rate in Hz for positive finite normals whose
+          unbiased exponent fits a right-shift decode (0..63).  Standard
+          audio rates (8000, 11025, 22050, 44100, 48000, …) land here.
 
 instances:
   common:
     value: chunks.chunks_through_common.last.body.common
     doc: First Common Chunk found by the bounded chunk walk.
+
+  sound:
+    value: chunks.chunks_through_sound.last.body.sound
+    doc: First Sound Data Chunk found after COMM.
+
+  sample_rate:
+    value: common.sample_rate_extended.as_hz
+    doc: Decoded integer sample rate (Hz) for differential vs ffprobe.
+
+  codec_label:
+    value: |
+      common.sample_size == 16 ? "pcm_s16be" : (
+        common.sample_size == 8 ? "pcm_s8" : (
+          common.sample_size == 24 ? "pcm_s24be" : (
+            common.sample_size == 32 ? "pcm_s32be" : "unknown"
+          )
+        )
+      )
+    doc: |
+      Uncompressed AIFF PCM is big-endian; map common sample sizes to
+      ffprobe codec_name values.
+
+  form_total_size:
+    value: form_size + 8
+    doc: |
+      Declared top-level FORM length including the 8-byte FORM header
+      (tag + size).  Equals the file size for a single-FORM AIFF file.
