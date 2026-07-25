@@ -57,6 +57,14 @@ units are complete.
 
 ## Tier 5 — depth + novel RE (routed sparingly, T1, three-attempt cap)
 
-FLIC delta-chunk opcodes, Smacker per-frame size tables + audio flags, VQA
-codebooks, MVE opcode stream — only on formats whose header already
-passes; self-checked depth fields explicitly labelled.
+Only on formats whose header already passes; self-checked depth fields
+explicitly labelled (recorded, not oracle-backed).
+
+| format | result | depth claim |
+|---|---|---|
+| smk | **DONE 2026-07-25** (Grok) | Structured 104-byte header remainder (7 audio-size slots, treesize + four Huffman sizes, 7× rate/flags tracks, pad) plus per-frame size and type tables sized by `total_frames`. Audio oracles GREEN: sample_rate 22050, channels 1, smackaudio. Frame count GREEN vs `duration_ts`. self_checked: `declared-count == walked-count`. |
+| flic | open | Delta-chunk / frame-chunk opcodes after the 128-byte header. |
+| wsvqa | open | Codebook / post-VQHD IFF chunk walk. |
+| ipmovie | open | Full chunk/opcode stream beyond first INIT_VIDEO_BUFFERS. |
+| roq | open | Post-QUAD_INFO chunk stream (codebooks, sound). |
+| aiff | open | Optional undersized-FORM validation; 80-bit extended sample-rate decode. |

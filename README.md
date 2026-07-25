@@ -18,6 +18,10 @@ third-party samples all match `ffprobe` on numeric, offset-sensitive
 fields; the parsers also validate format identities and bound fixed
 headers and chunk payloads. Tier 4 breadth is complete.
 
+Tier 5 depth began 2026-07-25: **Smacker** now walks audio-track
+descriptors and per-frame size/type tables and matches ffprobe on
+primary audio sample rate, channels, and codec as well as frame count.
+
 The Stage-0 harness remains pinned to Temurin 21.0.11 and Kaitai compiler
 0.11, with all four red-team cases proven to drive `check.sh` red.
 
