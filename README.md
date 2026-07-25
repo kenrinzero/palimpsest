@@ -27,6 +27,27 @@ the other eight formats in this corpus remain **net-new**.
 Harness: Temurin 21.0.11 + Kaitai compiler 0.11, pinned under
 `~/opt/kaitai` via `toolchain/provision.sh`.
 
+## Clone / develop
+
+```bash
+# 1. Toolchain (once per machine; no sudo — installs under ~/opt/kaitai)
+./toolchain/provision.sh
+
+# 2. Python deps
+uv sync
+
+# 3. Self-generated samples are in-tree. Decode-only FATE heads are
+#    gitignored (license murk) — refetch once:
+uv run python harness/stage_heads.py
+
+# 4. Gates
+./check.sh --selftest
+./check.sh au   # or any of the ten formats
+```
+
+Pinned oracle: **ffprobe 6.1.1**. If system FFmpeg drifts, stop and re-audit
+(DESIGN.md § 0).
+
 ## How a unit works
 
 ```bash
