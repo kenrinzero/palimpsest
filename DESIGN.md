@@ -134,9 +134,12 @@ Malformed-input hardening (2026-07-25): selected specs carry explicit
 `valid` floors so truncated or lying size fields fail at parse time —
 AIFF `form_size` ≥ 46 (form type + COMM + minimal SSND), classic COMM
 payload length 18, SSND payload ≥ 8; AU `data_offset` ≥ 24 with non-zero
-rate/channels. Fixtures under `redteam/aiff_undersized_form.bin`,
-`redteam/aiff_form_too_small_for_ssnd.bin`, and
-`redteam/au_short_offset.bin` are proven red by `./check.sh --selftest`
+rate/channels; RoQ non-zero frame rate and known chunk ids; FLIC
+size/frame geometry floors; MVE non-empty init chunk streams; Bink and
+VOC non-zero geometry/rate floors. Fixtures under `redteam/`
+(`aiff_undersized_form`, `aiff_form_too_small_for_ssnd`,
+`au_short_offset`, `roq_zero_rate`, `flic_tiny_size`,
+`mve_empty_first_chunk`) are proven red by `./check.sh --selftest`
 section 9/9.
 
 The full GREEN differential path is completed by starter unit S1's correct

@@ -52,7 +52,9 @@ seq:
     doc: Fixed 0x1133 signature word.
   - id: len_first_chunk_data
     type: u2
-    doc: Size in bytes of the first chunk's opcode stream.
+    valid:
+      min: 4
+    doc: Size in bytes of the first chunk's opcode stream (at least one opcode preamble).
   - id: first_chunk_type
     type: u2
     valid: 0x0002
@@ -63,7 +65,9 @@ seq:
     doc: Bounded opcode stream for the first INIT_VIDEO chunk.
   - id: len_second_chunk_data
     type: u2
-    doc: Size in bytes of the second chunk's opcode stream.
+    valid:
+      min: 4
+    doc: Size in bytes of the second chunk's opcode stream (at least one opcode preamble).
   - id: second_chunk_type
     type: u2
     valid: 0x0000

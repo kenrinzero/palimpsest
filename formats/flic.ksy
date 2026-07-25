@@ -25,7 +25,9 @@ doc: |
 seq:
   - id: size
     type: u4
-    doc: Total file size in bytes (self-length).
+    valid:
+      min: 128
+    doc: Total file size in bytes (self-length); at least the 128-byte header.
   - id: magic
     type: u2
     valid:
@@ -33,12 +35,18 @@ seq:
     doc: 0xAF11 = FLI, 0xAF12 = FLC.
   - id: frames
     type: u2
+    valid:
+      min: 1
     doc: Declared animation frame count (ring frame not included).
   - id: width
     type: u2
+    valid:
+      min: 1
     doc: Frame width in pixels.
   - id: height
     type: u2
+    valid:
+      min: 1
     doc: Frame height in pixels.
   - id: depth
     type: u2
@@ -59,7 +67,9 @@ seq:
       Left opaque; oframe1/oframe2 are the depth-critical offsets.
   - id: oframe1
     type: u4
-    doc: Absolute file offset of the first frame record (normally 128).
+    valid:
+      min: 128
+    doc: Absolute file offset of the first frame record (at least past the header).
   - id: oframe2
     type: u4
     doc: Absolute file offset of the second frame record.
@@ -76,7 +86,9 @@ types:
     seq:
       - id: size
         type: u4
-        doc: Total frame record size including this preamble.
+        valid:
+          min: 16
+        doc: Total frame record size including this preamble (at least 16).
       - id: magic
         type: u2
         valid:
@@ -98,7 +110,9 @@ types:
     seq:
       - id: size
         type: u4
-        doc: Subchunk size including this 6-byte header.
+        valid:
+          min: 6
+        doc: Subchunk size including this 6-byte header (at least the header).
       - id: chunk_type
         type: u2
         doc: |

@@ -1,20 +1,30 @@
 meta:
   id: voc
-  title: Creative Voice (VOC) audio file header
+  title: Creative Voice (VOC) full block stream
   endian: le
 doc: |
-  VOC (Creative Voice) audio container header.
+  VOC (Creative Voice) audio container — depth unit.
 
-  The file begins with a 26-byte header followed by data blocks.  This
-  header unit requires and exposes a type-9 first block (extended format,
-  v1.20+), whose payload has explicit sample rate, channels, and codec
-  fields.  Legacy type-1 decoding and full block traversal are deferred to
-  a depth unit.
+  Layout:
+
+  * 26-byte header (magic, DOS EOF, data_offset, version, id_code)
+  * optional padding bytes up to `data_offset`
+  * size-delimited data blocks until a type-0 terminator byte:
+      type u1; if type != 0: 24-bit LE size + payload
+
+  Block types used by the self-generated fixture:
+
+  * type 9 — extended format (v1.20+): sample rate, bits, channels, codec
+  * type 2 — continuation (raw sample bytes, same params as prior type 9)
+  * type 0 — terminator (single byte, no size/payload)
+
+  This unit walks the full block stream.  Oracle fields still come from
+  the first type-9 block (required for the fixture).  Legacy type-1
+  packing remains uninterpreted if encountered.
 
   Proven against ffprobe 6.1.1-3ubuntu5 on a self-generated 11025 Hz
-  mono pcm_s16le sample (ffmpeg `-f lavfi sine:440:1 -ar 11025 -ac 1`).
-  Gallery status: gallery-improving (a `creative_voice_file` entry exists
-  at formats.kaitai.io — this one adds the conformance gate).
+  mono pcm_s16le sample.  Gallery: gallery-improving
+  (`creative_voice_file` exists at formats.kaitai.io).
 
 seq:
   - id: magic
@@ -25,6 +35,8 @@ seq:
     doc: DOS EOF / terminator marker.
   - id: data_offset
     type: u2
+    valid:
+      min: 26
     doc: Byte offset of the first data block from the start of the file.
   - id: version_minor
     type: u1
@@ -36,28 +48,51 @@ seq:
     type: u2
     valid: '(0x1234 + (0xffff - ((version_major << 8) | version_minor))) & 0xffff'
     doc: Complementary code (~version + 0x1234) used to validate the header.
+  - id: header_pad
+    size: data_offset - 26
+    doc: Bytes between the fixed 26-byte header and the first data block.
+  - id: blocks
+    type: block
+    repeat: until
+    repeat-until: _.block_type == 0
+    doc: Data blocks through the type-0 terminator.
 
 types:
-  type9_block:
+  block:
     seq:
       - id: block_type
         type: u1
-        valid: 9
-        doc: Extended-format block type (9).
-      - id: block_size_b0
+        doc: |
+          Block type.  0 = terminator, 1 = legacy sound data, 2 =
+          continuation, 9 = extended format (v1.20+).
+      - id: size_b0
         type: u1
-      - id: block_size_b1
+        if: block_type != 0
+      - id: size_b1
         type: u1
-      - id: block_size_b2
+        if: block_type != 0
+      - id: size_b2
         type: u1
+        if: block_type != 0
       - id: body
         size: len_body
-        type: block_type9
-        doc: Bounded type-9 payload.
+        type: block_body
+        if: block_type != 0
+        doc: Payload for non-terminator blocks.
     instances:
       len_body:
-        value: block_size_b0 | (block_size_b1 << 8) | (block_size_b2 << 16)
-        doc: 24-bit little-endian block payload size (excludes the 4-byte header).
+        value: 'block_type == 0 ? 0 : (size_b0 | (size_b1 << 8) | (size_b2 << 16))'
+        doc: 24-bit little-endian payload size (0 for the terminator).
+
+  block_body:
+    seq:
+      - id: type9
+        type: block_type9
+        if: _parent.block_type == 9
+      - id: uninterpreted
+        size-eos: true
+        if: _parent.block_type != 9
+        doc: Continuation / legacy payloads retained as opaque bytes.
 
   block_type9:
     doc: |
@@ -67,12 +102,16 @@ types:
     seq:
       - id: sample_rate
         type: u4
+        valid:
+          min: 1
         doc: Sample rate in Hz.
       - id: bits_per_sample
         type: u1
         doc: Bits per sample (8, 16, ...).
       - id: channels
         type: u1
+        valid:
+          min: 1
         doc: Number of interleaved audio channels.
       - id: codec
         type: u2
@@ -83,27 +122,37 @@ types:
       - id: reserved
         size: 4
         doc: Reserved bytes (zero in the generated fixture).
+      - id: sample_data
+        size-eos: true
+        doc: PCM sample frames for this extended block.
 
 instances:
   first_block:
-    pos: data_offset
-    type: type9_block
-    doc: The required type-9 first data block.
+    value: blocks[0]
+    doc: First data block (type 9 for the self-generated fixture).
+
+  first_type9:
+    value: first_block.body.type9
+    doc: Extended-format payload of the first block.
 
   first_block_sample_rate:
-    value: first_block.body.sample_rate
-    doc: Sample rate from the first data block.
+    value: first_type9.sample_rate
+    doc: Sample rate from the first type-9 block.
 
   first_block_channels:
-    value: first_block.body.channels
-    doc: Channel count from the first data block.
+    value: first_type9.channels
+    doc: Channel count from the first type-9 block.
+
+  walked_block_count:
+    value: blocks.size
+    doc: Number of blocks walked including the type-0 terminator.
 
   codec_label:
     value: >
-      first_block.body.codec == 0 ? "pcm_u8" :
-      first_block.body.codec == 4 ? "pcm_s16le" :
-      first_block.body.codec == 6 ? "pcm_alaw" :
-      first_block.body.codec == 7 ? "pcm_mulaw" :
+      first_type9.codec == 0 ? "pcm_u8" :
+      first_type9.codec == 4 ? "pcm_s16le" :
+      first_type9.codec == 6 ? "pcm_alaw" :
+      first_type9.codec == 7 ? "pcm_mulaw" :
       "unknown"
     doc: |
       ffprobe-compatible codec name derived from the type-9 codec field.

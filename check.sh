@@ -450,10 +450,11 @@ selftest() {
 
   echo "selftest 9/9: malformed-input hardening must reject bad containers"
   # Compile the hardened specs (formats used by the fixtures below).
-  "$KSC" --target python --outdir "$ROOT/build" "$ROOT/formats/aiff.ksy" \
-    || { echo "selftest FAIL: aiff compile for malformed-input"; exit 1; }
-  "$KSC" --target python --outdir "$ROOT/build" "$ROOT/formats/au.ksy" \
-    || { echo "selftest FAIL: au compile for malformed-input"; exit 1; }
+  local fmt
+  for fmt in aiff au roq flic ipmovie; do
+    "$KSC" --target python --outdir "$ROOT/build" "$ROOT/formats/$fmt.ksy" \
+      || { echo "selftest FAIL: $fmt compile for malformed-input"; exit 1; }
+  done
 
   # Undersized AIFF FORM size field (20 < min 46) must fail validation.
   if (cd "$ROOT" && uv run python harness/extract.py build aiff \
@@ -476,6 +477,30 @@ selftest() {
         redteam/au_short_offset.bin formats/au.fields.json) \
       >/dev/null 2>&1; then
     echo "selftest FAIL: AU short data_offset accepted"
+    exit 1
+  fi
+
+  # RoQ frame_rate must be non-zero.
+  if (cd "$ROOT" && uv run python harness/extract.py build roq \
+        redteam/roq_zero_rate.bin formats/roq.fields.json) \
+      >/dev/null 2>&1; then
+    echo "selftest FAIL: RoQ zero frame_rate accepted"
+    exit 1
+  fi
+
+  # FLIC size field must cover the 128-byte header.
+  if (cd "$ROOT" && uv run python harness/extract.py build flic \
+        redteam/flic_tiny_size.bin formats/flic.fields.json) \
+      >/dev/null 2>&1; then
+    echo "selftest FAIL: FLIC tiny size field accepted"
+    exit 1
+  fi
+
+  # MVE first-chunk opcode stream must be non-empty.
+  if (cd "$ROOT" && uv run python harness/extract.py build ipmovie \
+        redteam/mve_empty_first_chunk.bin formats/ipmovie.fields.json) \
+      >/dev/null 2>&1; then
+    echo "selftest FAIL: MVE empty first chunk accepted"
     exit 1
   fi
 

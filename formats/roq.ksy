@@ -31,7 +31,9 @@ seq:
     doc: Fixed 0xFFFFFFFF sentinel required by the RoQ container header.
   - id: frame_rate
     type: u2
-    doc: Video frame rate in frames per second.
+    valid:
+      min: 1
+    doc: Video frame rate in frames per second (must be non-zero).
   - id: chunks
     type: chunk
     repeat: eos
@@ -42,12 +44,18 @@ types:
     seq:
       - id: chunk_id
         type: u2
+        valid:
+          any-of: [0x1001, 0x1002, 0x1011, 0x1020, 0x1021]
         doc: |
           Chunk type.  0x1001 = quad_info, 0x1002 = codebook,
           0x1011 = video data, 0x1020 = mono sound, 0x1021 = stereo sound.
       - id: len_body
         type: u4
-        doc: Chunk data size in bytes (excluding this 8-byte preamble).
+        valid:
+          expr: 'chunk_id != 0x1001 or _ >= 8'
+        doc: |
+          Chunk data size in bytes (excluding this 8-byte preamble).
+          QUAD_INFO payloads are at least 8 bytes (width/height + two words).
       - id: chunk_arg
         type: u2
         doc: Chunk argument (meaning depends on chunk type).

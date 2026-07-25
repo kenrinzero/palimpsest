@@ -6,5 +6,5 @@
     { "name": "channels", "kaitai_path": "first_block_channels", "ffprobe_path": ".streams[0].channels", "kind": "numeric" },
     { "name": "codec_name", "kaitai_path": "codec_label", "ffprobe_path": ".streams[0].codec_name", "kind": "label" }
   ],
-  "self_checked": []
+  "self_checked": ["declared-count == walked-count"]
 }

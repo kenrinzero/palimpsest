@@ -11,22 +11,21 @@ offset-sensitive field must match the oracle.
 
 ## Status
 
-Ten specs are implemented and differential-GREEN as of 2026-07-21:
-AU, VOC, RoQ, Smacker, Bink, Westwood VQA, Interplay MVE, FLIC/FLC,
-AIFF, and DPX. The five self-generated samples and five hash-pinned
-third-party samples all match `ffprobe` on numeric, offset-sensitive
-fields; the parsers also validate format identities and bound fixed
-headers and chunk payloads. Tier 4 breadth is complete.
+Ten specs are differential-GREEN on `main` (2026-07-25): AU, VOC, RoQ,
+Smacker, Bink, Westwood VQA, Interplay MVE, FLIC/FLC, AIFF, and DPX.
 
-Tier 5 depth (2026-07-25) is complete for the planned set: **Smacker**
-(audio tracks + frame tables), **Interplay MVE** (INIT_AUDIO_BUFFERS),
-**AIFF** (80-bit sample rate + SSND), **FLIC** (frame/subchunk walk),
-**Westwood VQA** (IFF through FINF), and **RoQ** (full chunk stream).
+**Breadth (Tier 4)** and **depth (Tier 5)** are complete for the planned
+set, including Bink audio/frame-offset tables and full VOC block walks.
+**Malformed-input hardening** adds explicit `valid` floors (AIFF, AU,
+RoQ, FLIC, MVE, Bink, VOC) with redteam fixtures under
+`./check.sh --selftest` (9/9).
 
-The Stage-0 harness remains pinned to Temurin 21.0.11 and Kaitai compiler
-0.11, with all four original red-team cases plus malformed-input fixtures
-(undersized AIFF FORM, AU short data_offset) proven to drive `check.sh`
-red under `--selftest` (9/9).
+**Kaitai gallery** (re-checked 2026-07-25): only `au` and
+`creative_voice_file` exist upstream — those two are gallery-improving;
+the other eight formats in this corpus remain **net-new**.
+
+Harness: Temurin 21.0.11 + Kaitai compiler 0.11, pinned under
+`~/opt/kaitai` via `toolchain/provision.sh`.
 
 ## How a unit works
 
