@@ -7,7 +7,7 @@ format is described by a Kaitai `.ksy` spec and checked against `ffprobe` with
 ## Current state
 
 **Tiers 1–5 complete; Tier 6 Waves A–C complete (2026-08-16).**
-Twenty-nine specs GREEN. Wave D authoring is in progress (`paf` GREEN).
+Thirty specs GREEN. Wave D authoring is in progress (`paf`, `dxa` GREEN).
 
 - Pinned toolchain + `ffprobe` 6.1.1. FATE heads restore with
   `./harness/stage_heads.py`.
@@ -15,7 +15,7 @@ Twenty-nine specs GREEN. Wave D authoring is in progress (`paf` GREEN).
 - Design note: `docs/superpowers/specs/2026-08-16-tier6-expansion-design.md`.
 - `DESIGN.md` stays **frozen**.
 
-**Next dispatchable unit:** Wave D `dxa` (STAGED). Then `bmv`, `c93`,
+**Next dispatchable unit:** Wave D `bmv` (STAGED). Then `c93`,
 `sol`, `siff`, `bethsoftvid`, `dsicin`, `xa`, `bfstm`. The optional
 gallery PR stays user-gated.
 
@@ -42,6 +42,7 @@ gallery PR stays user-gated.
 | VOC | GREEN | self-generated |
 | RoQ | GREEN | self-generated |
 | Amazing Studio PAF (`paf`) | GREEN | staged FATE head |
+| DXA (`dxa`) | GREEN | staged FATE head |
 | PS1 STR (`psxstr`) | GREEN | staged FATE head |
 | Smacker (`smk`) | GREEN | staged FATE head |
 | SMJPEG (`smjpeg`) | GREEN | self-generated |
@@ -127,7 +128,7 @@ ten this session). `dsicin` is Delphine CIN, not id CIN.
 | Slug | Format | Sample | FATE path | Advisory Quarry ID |
 |---|---|---|---|---|
 | `paf` | Amazing Studio Packed Animation File | GREEN | `paf/hod1-partial.paf` | `amazing.paf` |
-| `dxa` | Feeble Files / ScummVM DXA | STAGED | `dxa/scummvm.dxa` | `scummvm.dxa` |
+| `dxa` | Feeble Files / ScummVM DXA | GREEN | `dxa/scummvm.dxa` | `scummvm.dxa` |
 | `bmv` | Discworld II BMV | STAGED | `bmv/SURFING-partial.BMV` | `discworld.bmv` |
 | `c93` | Interplay C93 (Cyberia) | STAGED | `cyberia-c93/intro1.c93` | `interplay.c93` |
 | `sol` | Sierra SOL | STAGED | `sol/lsl7sample.sol` | `sierra.sol` |
@@ -187,6 +188,7 @@ ten this session). `dsicin` is Delphine CIN, not id CIN.
 - [x] Wave C `psxstr` GREEN (2026-08-16). Wave C complete.
 - [x] Wave D FATE staging (2026-08-16). Ten heads pinned. No `.ksy`.
 - [x] Wave D `paf` GREEN (2026-08-16).
+- [x] Wave D `dxa` GREEN (2026-08-16).
 
 ## How to verify the project
 
@@ -194,7 +196,7 @@ From the repository root:
 
 ```bash
 ./check.sh --selftest
-for f in au voc roq smk bink wsvqa ipmovie flic aiff dpx film_cpk wsaud ast argo_asf alp apm kvag smjpeg thp xmv smush vmd idcin wc3 fourxm yop brstm psxstr paf; do
+for f in au voc roq smk bink wsvqa ipmovie flic aiff dpx film_cpk wsaud ast argo_asf alp apm kvag smjpeg thp xmv smush vmd idcin wc3 fourxm yop brstm psxstr paf dxa; do
   ./check.sh "$f"
 done
 ```
