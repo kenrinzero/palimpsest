@@ -3,5 +3,9 @@ __pycache__/
 *.pyc
 build/
 .worktrees/
+# local working-copy overlay (atelier paths, machine notes)
+AGENTS.local.md
+.env
+.env.*
 # non-redistributable head-format sample cache (refetchable via manifests)
 samples/_staged/

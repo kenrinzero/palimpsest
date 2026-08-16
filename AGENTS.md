@@ -1,12 +1,7 @@
-> **Managed under atelier.** Before starting, read
-> `C:\Users\kenrin\Project\.atelier\CHARTER.md` (from WSL:
-> `/mnt/c/Users/kenrin/Project/.atelier/CHARTER.md`), the current week log in
-> `.atelier\logs\`, and this project's brief + log at
-> `.atelier\projects\coding\palimpsest\`. Clock out per the charter when done.
-
-<!-- Project-specific instructions below this line. -->
-
 # Working on Palimpsest
+
+If `AGENTS.local.md` is present, read it first. That file is a local
+working-copy overlay and is not part of the published tree.
 
 1. **Read `DESIGN.md`** (frozen), then take the next unit from
    `BACKLOG.md`. A decode-only head unit is dispatchable only when its

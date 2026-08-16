@@ -84,7 +84,7 @@ When Stratum ranks one of these formats:
    and its mutation/anti-degeneracy controls before registry acceptance.
 7. Record the exact Palimpsest commit used as maintainer-side specification
    provenance. Public Quarry documentation and tests must remain sufficient
-   without access to this private repository.
+   without requiring a private checkout of this tree.
 
 This is normally Tier 2 when the required structure is already described.
 Novel reverse engineering beyond the canonical specification is a separate

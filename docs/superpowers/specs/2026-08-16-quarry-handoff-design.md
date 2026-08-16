@@ -115,7 +115,7 @@ When Stratum ranks a Palimpsest-covered format:
    controls before registry acceptance.
 7. Record the exact Palimpsest commit used as maintainer-side specification
    provenance. Public Quarry documentation and tests must still explain and
-   prove the extractor without requiring readers to access the private repo.
+   prove the extractor without requiring a private checkout of this tree.
 
 The ordinary implementation is T2 when Palimpsest already describes the
 needed structure. Novel reverse engineering beyond the canonical spec is a
