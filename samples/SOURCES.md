@@ -122,6 +122,19 @@ ffmpeg -hide_banner -loglevel error \
 |---|---:|---|---|
 | `samples/apm/sine.apm` | 2305 | self-generated (command above) | `014ab1c136ed25c19f31dac497bf2247b27b5d65857903a303b1c78d01081a66` |
 
+## Tier-6 self-generated — kvag — 2026-08-16
+
+```bash
+ffmpeg -hide_banner -loglevel error \
+  -f lavfi -i 'sine=frequency=440:duration=0.2' \
+  -map_metadata -1 -fflags +bitexact -flags:a +bitexact \
+  -ar 22050 -ac 1 -f kvag -y samples/kvag/sine.kvag
+```
+
+| file | bytes | provenance | sha256 |
+|---|---:|---|---|
+| `samples/kvag/sine.kvag` | 2219 | self-generated (command above) | `2ee29dc2c79f1e8e23d79915293439dd4040bf1e58aac6b41b51250a18cb0302` |
+
 ## Decode-only heads — STAGED 2026-07-17 (Tier-3 prep unit)
 
 Third-party real bytes from the FFmpeg FATE suite
