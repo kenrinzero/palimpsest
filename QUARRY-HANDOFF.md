@@ -49,6 +49,7 @@ not queue a Quarry unit.
 | VOC (`voc`) | `creative.voc` | `formats/voc.ksy`; `formats/voc.fields.json` | `samples/voc/sine.voc`; `samples/SOURCES.md` | self-generated | sample_rate, channels, codec_name | declared-count == walked-count | chained VOC block walk with rate/channel extraction and validity floors | Not implemented |
 | Westwood AUD (`wsaud`) | `westwood.aud` | `formats/wsaud.ksy`; `formats/wsaud.fields.json` | `samples/wsaud/sine.aud`; `samples/SOURCES.md` | self-generated | sample_rate, channels, payload_size, codec_name | chunk-size-sum == file length | 12-byte header plus 0xDEAF chunk walk | Not implemented |
 | Westwood VQA (`wsvqa`) | `westwood.vqa` | `formats/wsvqa.ksy`; `formats/wsvqa.fields.json` | `samples/_staged/wsvqa/small-cut-v3.vqa`; `samples/SOURCES.md` | third-party | width, height, frames, finf_entries, frame_rate, sample_rate, channels, video_codec, audio_codec | declared-count == walked-count | FORM/VQHD parse and FINF/frame-offset traversal | Not implemented |
+| Xbox XMV (`xmv`) | `xbox.xmv` | `formats/xmv.ksy`; `formats/xmv.fields.json` | `samples/_staged/xmv/logos1p.fmv`; `samples/SOURCES.md` | third-party | width, height, duration_ms, audio_sample_rate, audio_channels, video_codec, audio_codec | declared-count == walked-count | XMV header plus audio-track table (WAVE tag 0x0069) | Not implemented |
 
 ## Future Quarry unit protocol
 
