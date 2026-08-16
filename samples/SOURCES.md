@@ -77,6 +77,22 @@ ffmpeg -hide_banner -loglevel error \
 |---|---:|---|---|
 | `samples/ast/sine.ast` | 25984 | self-generated (command above) | `411b9f3d2c500be4d099524d5c3319221dbb8d9db5d325a89e489240119add93` |
 
+## Tier-6 self-generated — argo_asf — 2026-08-16
+
+The muxer embeds an 8-byte title from `-name` (otherwise the output
+basename). `-name sine` keeps the bytes path-independent.
+
+```bash
+ffmpeg -hide_banner -loglevel error \
+  -f lavfi -i 'sine=frequency=440:duration=0.2' \
+  -map_metadata -1 -fflags +bitexact -flags:a +bitexact \
+  -ar 22050 -ac 1 -f argo_asf -name sine -y samples/argo_asf/sine.asf
+```
+
+| file | bytes | provenance | sha256 |
+|---|---:|---|---|
+| `samples/argo_asf/sine.asf` | 2390 | self-generated (command above) | `f1c6082586f46b6f4be7c4fca926a1751ea00a289212f8f3854c92ed28d85e2d` |
+
 ## Decode-only heads — STAGED 2026-07-17 (Tier-3 prep unit)
 
 Third-party real bytes from the FFmpeg FATE suite
