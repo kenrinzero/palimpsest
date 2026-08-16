@@ -15,13 +15,14 @@ Thirty-eight specs GREEN.
 - Design note: `docs/superpowers/specs/2026-08-16-tier6-expansion-design.md`.
 - `DESIGN.md` stays **frozen**.
 
-**Next dispatchable unit:** none. Wave D is complete. The optional
-gallery PR stays user-gated.
+**Next dispatchable unit:** none. The catalogue is complete. The
+optional Kaitai gallery PR was declined (2026-08-16); the corpus
+stays contained here.
 
 ## How a cold agent picks this up
 
 1. Read `AGENTS.md` and frozen `DESIGN.md`.
-2. No Wave D unit remains. The optional gallery PR is user-gated.
+2. No format unit remains. Do not open a Kaitai gallery PR.
 3. Authoring units still touch only one format's `.ksy` and sidecar.
    Never the harness, never `redteam/` (except a dedicated staging
    unit like this Wave D pin).
@@ -154,9 +155,9 @@ Samples **STAGED 2026-08-16**. All ten heads **GREEN 2026-08-16**.
 ## Other remaining work
 
 - [x] **Quarry handoff delivered** (2026-08-16). `QUARRY-HANDOFF.md`.
-- [ ] **Optional gallery PR** — only if the project becomes public and the
-      user wants it. Existing AU/VOC are gallery-improving; the original eight
-      plus every Tier 6 slug above are net-new candidates as of 2026-08-16.
+- [x] **Optional gallery PR declined** (2026-08-16). The user chose to
+      keep the catalogue contained here. AU/VOC remain gallery-improving
+      and the rest remain net-new if that decision is ever revisited.
 
 ## Completed milestones
 

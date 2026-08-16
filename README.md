@@ -11,8 +11,8 @@ offset-sensitive field must match the oracle.
 
 ## Status
 
-Palimpsest is active on a Tier 6 expansion. Thirty-eight specs are
-differential-GREEN. Waves A–D are complete. See `BACKLOG.md`.
+Palimpsest is maintained. Thirty-eight specs are differential-GREEN.
+Waves A–D are complete. See `BACKLOG.md`.
 
 Shipped (Tiers 1–5, 2026-07-25): AU, VOC, RoQ, Smacker, Bink, Westwood VQA,
 Interplay MVE, FLIC/FLC, AIFF, and DPX. Tier 6 Wave A: `film_cpk`, `wsaud`,
