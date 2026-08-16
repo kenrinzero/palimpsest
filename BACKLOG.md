@@ -7,7 +7,7 @@ format is described by a Kaitai `.ksy` spec and checked against `ffprobe` with
 ## Current state
 
 **Tiers 1–5 complete; Tier 6 Wave A and Wave B complete (2026-08-16).**
-Twenty-four specs GREEN. Four Wave C FATE heads remain staged.
+Twenty-five specs GREEN. Three Wave C FATE heads remain staged.
 
 - Pinned toolchain + `ffprobe` 6.1.1. FATE heads restore with
   `./harness/stage_heads.py`.
@@ -16,7 +16,7 @@ Twenty-four specs GREEN. Four Wave C FATE heads remain staged.
 - `DESIGN.md` stays **frozen**. Wave C authoring units touch only that
   format's `.ksy` and sidecar.
 
-**Next dispatchable unit:** Wave C `4xm` (Sample **STAGED**).
+**Next dispatchable unit:** Wave C `yop` (Sample **STAGED**).
 
 ## How a cold agent picks this up
 
@@ -59,6 +59,7 @@ A decode-only head is **not** dispatchable until Wave B has marked it STAGED.
 | Sierra VMD (`vmd`) | GREEN | staged FATE head |
 | id CIN (`idcin`) | GREEN | staged FATE head |
 | Westwood WC3 (`wc3`) | GREEN | staged FATE head |
+| 4X / 4XM (`fourxm`) | GREEN | staged FATE head |
 | AIFF | GREEN | self-generated |
 | DPX | GREEN | self-generated |
 
@@ -103,13 +104,16 @@ Dispatchable only when Sample says STAGED.
 | `vmd` | Sierra VMD | GREEN | `vmd/12.vmd` | `sierra.vmd` |
 | `idcin` | id CIN | GREEN | `idcin/idlog-2MB.cin` | `id.cin` |
 | `wc3` | Westwood WC3 movie | GREEN | `wc3movie/SC_32-part.MVE` | `westwood.wc3` |
-| `4xm` | 4X / 4XM | STAGED | `4xm/version1.4xm` | `4x.4xm` |
+| `fourxm` | 4X / 4XM | GREEN | `4xm/version1.4xm` | `4x.4xm` |
 | `yop` | Psygnosis YOP | STAGED | `yop/test1.yop` | `psygnosis.yop` |
 | `brstm` | Nintendo BRSTM | STAGED | `brstm/lozswd_partial.brstm` | `nintendo.brstm` |
 | `psxstr` | PS1 STR | STAGED | `psx-str/abc000_cut.str` | `sony.str` |
 
 `wc3` is **not** Interplay MVE (`ipmovie`). Different container, same `.MVE`
 extension.
+
+`fourxm` is the check slug for FFmpeg `4xm`. Kaitai `meta.id` cannot start
+with a digit.
 
 After each Wave C green, add the row to `QUARRY-HANDOFF.md`. Palimpsest green
 does not queue a Quarry extractor; Stratum still owns priority.
@@ -165,6 +169,7 @@ SOL, SIFF, Bethsoft VID, Delphine CIN, Maxis XA, BFSTM.
 - [x] Wave C `vmd` GREEN (2026-08-16).
 - [x] Wave C `idcin` GREEN (2026-08-16).
 - [x] Wave C `wc3` GREEN (2026-08-16).
+- [x] Wave C `fourxm` GREEN (2026-08-16). Slug is `fourxm` (Kaitai meta.id cannot start with a digit); FFmpeg `format_name` remains `4xm`.
 
 ## How to verify the project
 
@@ -172,7 +177,7 @@ From the repository root:
 
 ```bash
 ./check.sh --selftest
-for f in au voc roq smk bink wsvqa ipmovie flic aiff dpx film_cpk wsaud ast argo_asf alp apm kvag smjpeg thp xmv smush vmd idcin wc3; do
+for f in au voc roq smk bink wsvqa ipmovie flic aiff dpx film_cpk wsaud ast argo_asf alp apm kvag smjpeg thp xmv smush vmd idcin wc3 fourxm; do
   ./check.sh "$f"
 done
 ```

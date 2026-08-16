@@ -30,6 +30,7 @@ not queue a Quarry unit.
 
 | Format | Candidate Quarry ID | Canonical inputs | Sample / provenance | Independence | Oracle-backed fields | Self-checked claims | Demonstrated parser depth | Quarry extraction |
 |---|---|---|---|---|---|---|---|---|
+| 4X / 4XM (`fourxm`) | `4x.4xm` | `formats/fourxm.ksy`; `formats/fourxm.fields.json` | `samples/_staged/4xm/version1.4xm`; `samples/SOURCES.md` | third-party | width, height, fps, audio_sample_rate, audio_channels, audio_bit_rate, video_codec, audio_codec | None | RIFF/4XMV HEAD walk (std_ fps, vtrk geometry, strk audio) | Not implemented |
 | AIFF (`aiff`) | `iff.aiff` | `formats/aiff.ksy`; `formats/aiff.fields.json` | `samples/aiff/sine.aiff`; `samples/SOURCES.md` | self-generated | channels, sample_frames, bits_per_sample, sample_rate, codec_name | chunk-size-sum == file length | FORM/COMM/SSND walk, 80-bit sample-rate decode, malformed-size floors | Not implemented |
 | ALP (`alp`) | `lego.alp` | `formats/alp.ksy`; `formats/alp.fields.json` | `samples/alp/sine.alp`; `samples/SOURCES.md` | self-generated | sample_rate, channels, duration_samples, codec_name | None | ALP header, TUN/PCM size branch, IMA duration | Not implemented |
 | APM (`apm`) | `ubisoft.apm` | `formats/apm.ksy`; `formats/apm.fields.json` | `samples/apm/sine.apm`; `samples/SOURCES.md` | self-generated | sample_rate, channels, file_size, duration_samples, codec_name | None | WAVEFORMATEX-like prefix plus vs12/DATA tail | Not implemented |
