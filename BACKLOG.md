@@ -7,7 +7,7 @@ format is described by a Kaitai `.ksy` spec and checked against `ffprobe` with
 ## Current state
 
 **Tiers 1–5 complete; Tier 6 Waves A–C complete (2026-08-16).**
-Thirty-six specs GREEN. Wave D authoring is in progress (`paf`–`dsicin` GREEN).
+Thirty-seven specs GREEN. Wave D authoring is in progress (`paf`–`xa` GREEN).
 
 - Pinned toolchain + `ffprobe` 6.1.1. FATE heads restore with
   `./harness/stage_heads.py`.
@@ -15,8 +15,8 @@ Thirty-six specs GREEN. Wave D authoring is in progress (`paf`–`dsicin` GREEN)
 - Design note: `docs/superpowers/specs/2026-08-16-tier6-expansion-design.md`.
 - `DESIGN.md` stays **frozen**.
 
-**Next dispatchable unit:** Wave D `xa` (STAGED). Then `bfstm`.
-The optional gallery PR stays user-gated.
+**Next dispatchable unit:** Wave D `bfstm` (STAGED). The optional
+gallery PR stays user-gated.
 
 ## How a cold agent picks this up
 
@@ -48,6 +48,7 @@ The optional gallery PR stays user-gated.
 | Beam SIFF (`siff`) | GREEN | staged FATE head |
 | Bethesda VID (`bethsoftvid`) | GREEN | staged FATE head |
 | Delphine CIN (`dsicin`) | GREEN | staged FATE head |
+| Maxis XA (`xa`) | GREEN | staged FATE head |
 | PS1 STR (`psxstr`) | GREEN | staged FATE head |
 | Smacker (`smk`) | GREEN | staged FATE head |
 | SMJPEG (`smjpeg`) | GREEN | self-generated |
@@ -140,7 +141,7 @@ ten this session). `dsicin` is Delphine CIN, not id CIN.
 | `siff` | Beam Software SIFF | GREEN | `SIFF/INTRO_B.VB` | `beam.siff` |
 | `bethsoftvid` | Bethesda VID | GREEN | `bethsoft-vid/ANIM0001.VID` | `bethesda.vid` |
 | `dsicin` | Delphine CIN | GREEN | `delphine-cin/LOGO-partial.CIN` | `delphine.cin` |
-| `xa` | Maxis XA | STAGED | `maxis-xa/SC2KBUG.XA` | `maxis.xa` |
+| `xa` | Maxis XA | GREEN | `maxis-xa/SC2KBUG.XA` | `maxis.xa` |
 | `bfstm` | Nintendo BFSTM | STAGED | `bfstm/spl-forest-day.bfstm` | `nintendo.bfstm` |
 
 ## Exclusions (do not author)
@@ -200,6 +201,7 @@ ten this session). `dsicin` is Delphine CIN, not id CIN.
 - [x] Wave D `siff` GREEN (2026-08-16).
 - [x] Wave D `bethsoftvid` GREEN (2026-08-16).
 - [x] Wave D `dsicin` GREEN (2026-08-16).
+- [x] Wave D `xa` GREEN (2026-08-16).
 
 ## How to verify the project
 
@@ -207,7 +209,7 @@ From the repository root:
 
 ```bash
 ./check.sh --selftest
-for f in au voc roq smk bink wsvqa ipmovie flic aiff dpx film_cpk wsaud ast argo_asf alp apm kvag smjpeg thp xmv smush vmd idcin wc3 fourxm yop brstm psxstr paf dxa bmv c93 sol siff bethsoftvid dsicin; do
+for f in au voc roq smk bink wsvqa ipmovie flic aiff dpx film_cpk wsaud ast argo_asf alp apm kvag smjpeg thp xmv smush vmd idcin wc3 fourxm yop brstm psxstr paf dxa bmv c93 sol siff bethsoftvid dsicin xa; do
   ./check.sh "$f"
 done
 ```
