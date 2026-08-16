@@ -19,7 +19,7 @@ encodable tail first, then a FATE staging unit, then decode-only heads.
 - `DESIGN.md` stays **frozen**. New units follow that contract; they do not
   edit the harness except the one Wave B staging unit.
 
-**Next dispatchable unit:** `wsaud` (Wave A, first UNSTARTED row).
+**Next dispatchable unit:** `ast` (Wave A, first UNSTARTED row).
 
 ## How a cold agent picks this up
 
@@ -42,6 +42,7 @@ A decode-only head is **not** dispatchable until Wave B has marked it STAGED.
 |---|---|---|
 | AU | GREEN | self-generated |
 | Sega FILM (`film_cpk`) | GREEN | self-generated |
+| Westwood AUD (`wsaud`) | GREEN | self-generated |
 | VOC | GREEN | self-generated |
 | RoQ | GREEN | self-generated |
 | Smacker (`smk`) | GREEN | staged FATE head |
@@ -62,7 +63,7 @@ Gallery (re-checked 2026-08-16): all **net-new**. Do **not** edit frozen
 | Slug | Format | Status | Sample recipe | Oracle floor | Advisory Quarry ID |
 |---|---|---|---|---|---|
 | `film_cpk` | Sega FILM (Saturn/Dreamcast) | GREEN | `testsrc=32x24:duration=0.5:rate=15`, `-an -c:v cinepak -f film_cpk` → `samples/film_cpk/test.cpk` | width, height, num_frames, fps_num, fps_den, codec_name | `sega.film` |
-| `wsaud` | Westwood AUD | UNSTARTED | `sine=440:duration=0.2`, `-ar 22050 -ac 1 -c:a adpcm_ima_ws -f wsaud` → `samples/wsaud/sine.aud` | sample_rate, channels | `westwood.aud` |
+| `wsaud` | Westwood AUD | GREEN | `sine=440:duration=0.2`, `-ar 22050 -ac 1 -c:a adpcm_ima_ws -f wsaud` → `samples/wsaud/sine.aud` | sample_rate, channels, payload_size, codec_name | `westwood.aud` |
 | `ast` | Nintendo AST | UNSTARTED | `sine=440:duration=0.2`, `-ar 32000 -ac 2 -c:a pcm_s16be_planar -f ast` → `samples/ast/sine.ast` | sample_rate, channels | `nintendo.ast` |
 | `argo_asf` | Argonaut ASF (Croc) | UNSTARTED | `sine=440:duration=0.2`, `-ar 22050 -ac 1 -f argo_asf` → `samples/argo_asf/sine.asf` | sample_rate, channels | `argo.asf` |
 | `alp` | LEGO Racers ALP | UNSTARTED | `sine=440:duration=0.2`, `-ar 22050 -ac 1 -f alp` → `samples/alp/sine.alp` | sample_rate, channels | `lego.alp` |
@@ -145,6 +146,7 @@ SOL, SIFF, Bethsoft VID, Delphine CIN, Maxis XA, BFSTM.
 - [x] Contract-only Quarry feeder handoff documented (`8b14dca`).
 - [x] Tier 6 expansion authorized and queued (2026-08-16).
 - [x] Wave A `film_cpk` GREEN (2026-08-16).
+- [x] Wave A `wsaud` GREEN (2026-08-16).
 
 ## How to verify the project
 
@@ -152,7 +154,7 @@ From the repository root:
 
 ```bash
 ./check.sh --selftest
-for f in au voc roq smk bink wsvqa ipmovie flic aiff dpx film_cpk; do
+for f in au voc roq smk bink wsvqa ipmovie flic aiff dpx film_cpk wsaud; do
   ./check.sh "$f"
 done
 ```

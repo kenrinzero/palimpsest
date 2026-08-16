@@ -51,6 +51,19 @@ ffmpeg -hide_banner -loglevel error \
 |---|---:|---|---|
 | `samples/film_cpk/test.cpk` | 2592 | self-generated (command above) | `2197d49e2b531bff710d0f5d99cf871a10953602d1687f183d8c690ca8dd2d95` |
 
+## Tier-6 self-generated — wsaud — 2026-08-16
+
+```bash
+ffmpeg -hide_banner -loglevel error \
+  -f lavfi -i 'sine=frequency=440:duration=0.2' \
+  -map_metadata -1 -fflags +bitexact -flags:a +bitexact \
+  -ar 22050 -ac 1 -c:a adpcm_ima_ws -f wsaud -y samples/wsaud/sine.aud
+```
+
+| file | bytes | provenance | sha256 |
+|---|---:|---|---|
+| `samples/wsaud/sine.aud` | 2241 | self-generated (command above) | `4960194ae84105a7a40425c8520828ab9e4c005ff1c5b65c5c6088f25d41b9f2` |
+
 ## Decode-only heads — STAGED 2026-07-17 (Tier-3 prep unit)
 
 Third-party real bytes from the FFmpeg FATE suite
