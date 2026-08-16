@@ -7,7 +7,7 @@ format is described by a Kaitai `.ksy` spec and checked against `ffprobe` with
 ## Current state
 
 **Tiers 1–5 complete; Tier 6 Wave A and Wave B complete (2026-08-16).**
-Twenty-two specs GREEN. Six Wave C FATE heads remain staged.
+Twenty-three specs GREEN. Five Wave C FATE heads remain staged.
 
 - Pinned toolchain + `ffprobe` 6.1.1. FATE heads restore with
   `./harness/stage_heads.py`.
@@ -16,7 +16,7 @@ Twenty-two specs GREEN. Six Wave C FATE heads remain staged.
 - `DESIGN.md` stays **frozen**. Wave C authoring units touch only that
   format's `.ksy` and sidecar.
 
-**Next dispatchable unit:** Wave C `idcin` (Sample **STAGED**).
+**Next dispatchable unit:** Wave C `wc3` (Sample **STAGED**).
 
 ## How a cold agent picks this up
 
@@ -57,6 +57,7 @@ A decode-only head is **not** dispatchable until Wave B has marked it STAGED.
 | Xbox XMV (`xmv`) | GREEN | staged FATE head |
 | LucasArts Smush (`smush`) | GREEN | staged FATE head |
 | Sierra VMD (`vmd`) | GREEN | staged FATE head |
+| id CIN (`idcin`) | GREEN | staged FATE head |
 | AIFF | GREEN | self-generated |
 | DPX | GREEN | self-generated |
 
@@ -99,7 +100,7 @@ Dispatchable only when Sample says STAGED.
 | `xmv` | Xbox XMV | GREEN | `xmv/logos1p.fmv` | `xbox.xmv` |
 | `smush` | LucasArts Smush | GREEN | `smush/ronin_part.znm` | `lucasarts.smush` |
 | `vmd` | Sierra VMD | GREEN | `vmd/12.vmd` | `sierra.vmd` |
-| `idcin` | id CIN | STAGED | `idcin/idlog-2MB.cin` | `id.cin` |
+| `idcin` | id CIN | GREEN | `idcin/idlog-2MB.cin` | `id.cin` |
 | `wc3` | Westwood WC3 movie | STAGED | `wc3movie/SC_32-part.MVE` | `westwood.wc3` |
 | `4xm` | 4X / 4XM | STAGED | `4xm/version1.4xm` | `4x.4xm` |
 | `yop` | Psygnosis YOP | STAGED | `yop/test1.yop` | `psygnosis.yop` |
@@ -161,6 +162,7 @@ SOL, SIFF, Bethsoft VID, Delphine CIN, Maxis XA, BFSTM.
 - [x] Wave C `xmv` GREEN (2026-08-16).
 - [x] Wave C `smush` GREEN (2026-08-16).
 - [x] Wave C `vmd` GREEN (2026-08-16).
+- [x] Wave C `idcin` GREEN (2026-08-16).
 
 ## How to verify the project
 
@@ -168,7 +170,7 @@ From the repository root:
 
 ```bash
 ./check.sh --selftest
-for f in au voc roq smk bink wsvqa ipmovie flic aiff dpx film_cpk wsaud ast argo_asf alp apm kvag smjpeg thp xmv smush vmd; do
+for f in au voc roq smk bink wsvqa ipmovie flic aiff dpx film_cpk wsaud ast argo_asf alp apm kvag smjpeg thp xmv smush vmd idcin; do
   ./check.sh "$f"
 done
 ```
