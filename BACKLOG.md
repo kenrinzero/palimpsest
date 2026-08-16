@@ -7,7 +7,7 @@ format is described by a Kaitai `.ksy` spec and checked against `ffprobe` with
 ## Current state
 
 **Tiers 1–5 complete; Tier 6 Wave A and Wave B complete (2026-08-16).**
-Twenty-six specs GREEN. Two Wave C FATE heads remain staged.
+Twenty-seven specs GREEN. One Wave C FATE head remains staged.
 
 - Pinned toolchain + `ffprobe` 6.1.1. FATE heads restore with
   `./harness/stage_heads.py`.
@@ -16,7 +16,7 @@ Twenty-six specs GREEN. Two Wave C FATE heads remain staged.
 - `DESIGN.md` stays **frozen**. Wave C authoring units touch only that
   format's `.ksy` and sidecar.
 
-**Next dispatchable unit:** Wave C `brstm` (Sample **STAGED**).
+**Next dispatchable unit:** Wave C `psxstr` (Sample **STAGED**).
 
 ## How a cold agent picks this up
 
@@ -49,6 +49,7 @@ A decode-only head is **not** dispatchable until Wave B has marked it STAGED.
 | Smacker (`smk`) | GREEN | staged FATE head |
 | SMJPEG (`smjpeg`) | GREEN | self-generated |
 | Bink | GREEN | staged FATE head |
+| Nintendo BRSTM (`brstm`) | GREEN | staged FATE head |
 | Westwood VQA (`wsvqa`) | GREEN | staged FATE head |
 | Interplay MVE (`ipmovie`) | GREEN | staged FATE head |
 | KVAG (`kvag`) | GREEN | self-generated |
@@ -107,7 +108,7 @@ Dispatchable only when Sample says STAGED.
 | `wc3` | Westwood WC3 movie | GREEN | `wc3movie/SC_32-part.MVE` | `westwood.wc3` |
 | `fourxm` | 4X / 4XM | GREEN | `4xm/version1.4xm` | `4x.4xm` |
 | `yop` | Psygnosis YOP | GREEN | `yop/test1.yop` | `psygnosis.yop` |
-| `brstm` | Nintendo BRSTM | STAGED | `brstm/lozswd_partial.brstm` | `nintendo.brstm` |
+| `brstm` | Nintendo BRSTM | GREEN | `brstm/lozswd_partial.brstm` | `nintendo.brstm` |
 | `psxstr` | PS1 STR | STAGED | `psx-str/abc000_cut.str` | `sony.str` |
 
 `wc3` is **not** Interplay MVE (`ipmovie`). Different container, same `.MVE`
@@ -172,6 +173,7 @@ SOL, SIFF, Bethsoft VID, Delphine CIN, Maxis XA, BFSTM.
 - [x] Wave C `wc3` GREEN (2026-08-16).
 - [x] Wave C `fourxm` GREEN (2026-08-16). Slug is `fourxm` (Kaitai meta.id cannot start with a digit); FFmpeg `format_name` remains `4xm`.
 - [x] Wave C `yop` GREEN (2026-08-16).
+- [x] Wave C `brstm` GREEN (2026-08-16).
 
 ## How to verify the project
 
@@ -179,7 +181,7 @@ From the repository root:
 
 ```bash
 ./check.sh --selftest
-for f in au voc roq smk bink wsvqa ipmovie flic aiff dpx film_cpk wsaud ast argo_asf alp apm kvag smjpeg thp xmv smush vmd idcin wc3 fourxm yop; do
+for f in au voc roq smk bink wsvqa ipmovie flic aiff dpx film_cpk wsaud ast argo_asf alp apm kvag smjpeg thp xmv smush vmd idcin wc3 fourxm yop brstm; do
   ./check.sh "$f"
 done
 ```
