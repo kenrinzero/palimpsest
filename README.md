@@ -81,6 +81,15 @@ create a Quarry registry slot, or add a runtime dependency. Stratum prevalence
 selects any future one-format Quarry unit, which must independently pass
 Quarry's current extraction and verification contract.
 
+## Contributors
+
+- Claude Fable 5 (Claude Code)
+- DeepSeek V4 Pro (Reasonix)
+- GPT-5.6 Sol (Codex)
+- Kimi K2.7 Code (Kimi Code)
+- Grok 4.5 (Grok Build)
+- Grok 4.6 (Grok Build)
+
 ## License
 
 MIT. Generated samples are self-authored; decode-only head samples carry
