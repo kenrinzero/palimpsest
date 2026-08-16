@@ -1,0 +1,10 @@
+{
+  "sample": "samples/_staged/sol/lsl7sample.sol",
+  "independence": "third-party",
+  "fields": [
+    { "name": "sample_rate", "kaitai_path": "sample_rate", "ffprobe_path": ".streams[0].sample_rate", "kind": "numeric" },
+    { "name": "channels", "kaitai_path": "channels", "ffprobe_path": ".streams[0].channels", "kind": "numeric" },
+    { "name": "audio_codec", "kaitai_path": "codec_label", "ffprobe_path": ".streams[0].codec_name", "kind": "label" }
+  ],
+  "self_checked": []
+}
