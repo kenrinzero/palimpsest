@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Stage the decode-only head-format samples (Tier-3 five + Wave C ten).
+"""Stage the decode-only head-format samples (Tier-3 five + Wave C ten + Wave D ten).
 
 Source: the FFmpeg FATE suite (fate-suite.ffmpeg.org) — the exact corpus
 ffmpeg tests these demuxers against, so ffprobe compatibility is
@@ -23,7 +23,8 @@ STAGED = ROOT / "samples" / "_staged"
 BASE = "https://fate-suite.ffmpeg.org/"
 
 # (fate path, format dir, pinned sha256 — TOFU then freeze)
-# Tier-3 five: TOFU'd 2026-07-17. Wave C ten: TOFU'd 2026-08-16, now frozen.
+# Tier-3 five: TOFU'd 2026-07-17. Wave C ten: TOFU'd 2026-08-16, frozen.
+# Wave D ten: TOFU'd 2026-08-16, frozen.
 HEADS = [
     ("smacker/wetlogo.smk", "smk",
      "dfba9d646f0889f073edb3c3241115f92b4c84f5c567da3e0f5bc7900f646c49"),
@@ -55,6 +56,26 @@ HEADS = [
      "5c90dc6ad3e0ed89402c422570ae0d836518557d944bcf77b5a29712b16d551d"),
     ("psx-str/abc000_cut.str", "psxstr",
      "681df9dd0a50fccdd55553c1fa6b985fc47b3ea0177d18848158134944dab0a8"),
+    ("paf/hod1-partial.paf", "paf",
+     "43215ae789d636ca6557dd0eeca0c34121860ce3ad72562041e6da14ba07a0e8"),
+    ("dxa/scummvm.dxa", "dxa",
+     "40f21a2327e546cfc696019179c60f19375fadbf3b0cebee26554f9e5a90c178"),
+    ("bmv/SURFING-partial.BMV", "bmv",
+     "29b505e6f0054602be0933a639bc58ab1567310481b3926cf6dfa0b055173d46"),
+    ("cyberia-c93/intro1.c93", "c93",
+     "751f98f4bdd00c3e7570ce72a9f3a09b55a6188758d917db041cd2ddb928ccc1"),
+    ("sol/lsl7sample.sol", "sol",
+     "19f778c41091bfe4a7ac3fb74540aadfb5e2ccb0085238e3042b78aeac09f936"),
+    ("SIFF/INTRO_B.VB", "siff",
+     "034bc27bce8ffdb5413e1f5cef8471a7f021c6e28f59a6e9d307e56844550bea"),
+    ("bethsoft-vid/ANIM0001.VID", "bethsoftvid",
+     "7bce340fba63beb614802904a514294f896f196031d7ae1a698dfca61e422938"),
+    ("delphine-cin/LOGO-partial.CIN", "dsicin",
+     "ac8c01d89d484ab3a61761aa465350ca4c1b56bf4ea59f8dc0572873f25bbc7e"),
+    ("maxis-xa/SC2KBUG.XA", "xa",
+     "9d68e3b081a824a0d81ff71503c7e83bafd6a00f7bab8b762a99f442f8cfb05e"),
+    ("bfstm/spl-forest-day.bfstm", "bfstm",
+     "0a892a3833e81b91a28444ca66f9ebc844db990490f12cf0760db224100a9332"),
 ]
 
 

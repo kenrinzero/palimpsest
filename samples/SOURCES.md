@@ -196,5 +196,30 @@ Independence for all ten: **third-party**. `wc3` is Westwood WC3 movie
 Full sha256 values are pinned in `harness/stage_heads.py` (a refetch
 fails loudly on drift).
 
+## Decode-only heads — STAGED 2026-08-16 (Tier 6 Wave D)
+
+Ten additional FATE heads for Wave D. Same license posture: gitignored
+`samples/_staged/`, sha256-pinned in `harness/stage_heads.py`. Probed
+green with ffprobe 6.1.1-3ubuntu5 at staging time — every sample
+exposes numeric oracle fields. Independence for all ten:
+**third-party**. `dsicin` is Delphine CIN, not id CIN. `xa` is Maxis
+XA (`format_name=xa`, `adpcm_ea_maxis_xa`), not ADX.
+
+| file (gitignored) | bytes | origin (fate-suite path) | ffprobe 6.1.1 at staging |
+|---|---|---|---|
+| `_staged/paf/hod1-partial.paf` | 2097152 | `paf/hod1-partial.paf` | paf: paf_video 256×192 @10 + paf_audio 22050Hz/2ch |
+| `_staged/dxa/scummvm.dxa` | 100000 | `dxa/scummvm.dxa` | dxa: dxa 640×200 @100000/8333 (video-only) |
+| `_staged/bmv/SURFING-partial.BMV` | 1048576 | `bmv/SURFING-partial.BMV` | bmv: bmv_video 640×429 @12 + bmv_audio 22050Hz/2ch |
+| `_staged/c93/intro1.c93` | 1933312 | `cyberia-c93/intro1.c93` (upstream md5 ok) | c93: c93 320×192 @25/2 + pcm_u8 16129Hz/1ch |
+| `_staged/sol/lsl7sample.sol` | 299452 | `sol/lsl7sample.sol` (upstream md5 ok) | sol: sol_dpcm 22050Hz/2ch (audio-only) |
+| `_staged/siff/INTRO_B.VB` | 1722766 | `SIFF/INTRO_B.VB` (upstream md5 ok) | siff: vb 320×240 @12 + pcm_u8 22050Hz/1ch |
+| `_staged/bethsoftvid/ANIM0001.VID` | 1430898 | `bethsoft-vid/ANIM0001.VID` (upstream md5 ok) | bethsoftvid: pcm_u8 11111Hz/1ch + bethsoftvid 320×200 @14 (audio is stream 0) |
+| `_staged/dsicin/LOGO-partial.CIN` | 1048576 | `delphine-cin/LOGO-partial.CIN` (upstream md5 ok) | dsicin: dsicinvideo 320×160 @12 + dsicinaudio 22050Hz/1ch |
+| `_staged/xa/SC2KBUG.XA` | 1337079 | `maxis-xa/SC2KBUG.XA` (upstream md5 ok) | xa: adpcm_ea_maxis_xa 22050Hz/2ch (audio-only) |
+| `_staged/bfstm/spl-forest-day.bfstm` | 129824 | `bfstm/spl-forest-day.bfstm` | bfstm: adpcm_thp 32000Hz/1ch (audio-only) |
+
+Full sha256 values are pinned in `harness/stage_heads.py` (a refetch
+fails loudly on drift).
+
 Toolchain pin (DESIGN.md sec.1): Temurin JRE 21.0.11 + kaitai-struct-compiler 0.11
 + pypi kaitaistruct 0.11, at ~/opt/kaitai (re-create: toolchain/provision.sh).

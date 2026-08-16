@@ -7,7 +7,8 @@ format is described by a Kaitai `.ksy` spec and checked against `ffprobe` with
 ## Current state
 
 **Tiers 1–5 complete; Tier 6 Waves A–C complete (2026-08-16).**
-Twenty-eight specs GREEN. Wave D remains parked.
+Twenty-eight specs GREEN. Wave D FATE heads are **STAGED**; authoring
+is not authorized yet.
 
 - Pinned toolchain + `ffprobe` 6.1.1. FATE heads restore with
   `./harness/stage_heads.py`.
@@ -15,17 +16,19 @@ Twenty-eight specs GREEN. Wave D remains parked.
 - Design note: `docs/superpowers/specs/2026-08-16-tier6-expansion-design.md`.
 - `DESIGN.md` stays **frozen**.
 
-**Next dispatchable unit:** none. Wave C is complete. Wave D is parked
-unless a later session explicitly adds it. The optional gallery PR stays
-user-gated.
+**Next dispatchable unit:** none. Wave D samples are STAGED. Do not
+author a Wave D `.ksy` until a later session explicitly starts one
+(first would be `paf`). The optional gallery PR stays user-gated.
 
 ## How a cold agent picks this up
 
 1. Read `AGENTS.md` and frozen `DESIGN.md`.
-2. There is no Wave C row left. Do not start Wave D unless the user
-   explicitly authorizes it. The optional gallery PR is user-gated.
+2. Wave D authoring is **not** dispatchable until the user starts a
+   named row. Samples are already STAGED. The optional gallery PR is
+   user-gated.
 3. Authoring units still touch only one format's `.ksy` and sidecar.
-   Never the harness, never `redteam/`.
+   Never the harness, never `redteam/` (except a dedicated staging
+   unit like this Wave D pin).
 
 ## Existing inventory (Tiers 1–5) — GREEN
 
@@ -115,12 +118,25 @@ with a digit.
 After each Wave C green, add the row to `QUARRY-HANDOFF.md`. Palimpsest green
 does not queue a Quarry extractor; Stratum still owns priority.
 
-## Tier 6 — Wave D (parked reserve)
+## Tier 6 — Wave D (decode-only heads)
 
-Not authorized unless a later session explicitly adds them. FATE dirs exist:
+Independence: **third-party**. Gallery: all **net-new** as of 2026-08-16.
+Samples **STAGED 2026-08-16**. Authoring is **not** authorized until a
+later session names a row. `dsicin` is Delphine CIN, not id CIN.
+`xa` is Maxis XA (`adpcm_ea_maxis_xa`), not ADX.
 
-PAF (`paf/hod1-partial.paf`), DXA, BMV, C93 (`cyberia-c93/intro1.c93`),
-SOL, SIFF, Bethsoft VID, Delphine CIN, Maxis XA, BFSTM.
+| Slug | Format | Sample | FATE path | Advisory Quarry ID |
+|---|---|---|---|---|
+| `paf` | Amazing Studio Packed Animation File | STAGED | `paf/hod1-partial.paf` | `amazing.paf` |
+| `dxa` | Feeble Files / ScummVM DXA | STAGED | `dxa/scummvm.dxa` | `scummvm.dxa` |
+| `bmv` | Discworld II BMV | STAGED | `bmv/SURFING-partial.BMV` | `discworld.bmv` |
+| `c93` | Interplay C93 (Cyberia) | STAGED | `cyberia-c93/intro1.c93` | `interplay.c93` |
+| `sol` | Sierra SOL | STAGED | `sol/lsl7sample.sol` | `sierra.sol` |
+| `siff` | Beam Software SIFF | STAGED | `SIFF/INTRO_B.VB` | `beam.siff` |
+| `bethsoftvid` | Bethesda VID | STAGED | `bethsoft-vid/ANIM0001.VID` | `bethesda.vid` |
+| `dsicin` | Delphine CIN | STAGED | `delphine-cin/LOGO-partial.CIN` | `delphine.cin` |
+| `xa` | Maxis XA | STAGED | `maxis-xa/SC2KBUG.XA` | `maxis.xa` |
+| `bfstm` | Nintendo BFSTM | STAGED | `bfstm/spl-forest-day.bfstm` | `nintendo.bfstm` |
 
 ## Exclusions (do not author)
 
@@ -170,6 +186,7 @@ SOL, SIFF, Bethsoft VID, Delphine CIN, Maxis XA, BFSTM.
 - [x] Wave C `yop` GREEN (2026-08-16).
 - [x] Wave C `brstm` GREEN (2026-08-16).
 - [x] Wave C `psxstr` GREEN (2026-08-16). Wave C complete.
+- [x] Wave D FATE staging (2026-08-16). Ten heads pinned. No `.ksy`.
 
 ## How to verify the project
 
