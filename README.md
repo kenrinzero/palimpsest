@@ -11,7 +11,8 @@ offset-sensitive field must match the oracle.
 
 ## Status
 
-Ten specs are differential-GREEN on `main` (2026-07-25): AU, VOC, RoQ,
+Palimpsest is maintained: its planned implementation scope is complete. Ten
+specs are differential-GREEN on `main` (2026-07-25): AU, VOC, RoQ,
 Smacker, Bink, Westwood VQA, Interplay MVE, FLIC/FLC, AIFF, and DPX.
 
 **Breadth (Tier 4)** and **depth (Tier 5)** are complete for the planned
@@ -65,6 +66,15 @@ reported as recorded and not oracle-backed. Selected numeric fields in the
 self-generated AU, AIFF, and DPX units opt into MediaInfo as a best-effort
 second oracle. MediaInfo is not required; each run reports exactly which
 mapped fields were checked or skipped.
+
+## Quarry feeder handoff
+
+[`QUARRY-HANDOFF.md`](QUARRY-HANDOFF.md) is the canonical maintainer-side
+contract for using these specifications as evidence in future Quarry work. It
+supplies validated parser/header facts only: it does not implement extraction,
+create a Quarry registry slot, or add a runtime dependency. Stratum prevalence
+selects any future one-format Quarry unit, which must independently pass
+Quarry's current extraction and verification contract.
 
 ## License
 

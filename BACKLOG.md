@@ -6,10 +6,11 @@ format is described by a Kaitai `.ksy` spec and checked against `ffprobe` with
 
 ## Current state
 
-**Healthy and complete through the current planned scope.** As of 2026-07-27:
+**Healthy, maintained, and complete through the current planned scope.** As of
+2026-08-16:
 
-- `main` and `origin/main` are both at `9533efc`; no source/spec drift was
-  present before this backlog refresh.
+- The implementation/spec baseline is `9533efc`; later commits are
+  documentation-only design, planning, and feeder-handoff records.
 - All ten format checks are GREEN.
 - `./check.sh --selftest` is GREEN: 9/9 checks, including malformed-input
   hardening.
@@ -40,9 +41,9 @@ There are no unstarted format units in the current plan.
 
 These are decisions or handoffs, not blocked implementation units.
 
-- [ ] **Quarry handoff — wait for Quarry to graduate.** Then provide the
-  Palimpsest format inventory and validation evidence.
-- [ ] **Optional gallery PR — only if the project becomes public and Kenrin
+- [x] **Quarry handoff delivered.** `QUARRY-HANDOFF.md` records the canonical
+  format inventory, evidence boundary, and Stratum-ranked future-unit protocol.
+- [ ] **Optional gallery PR — only if the project becomes public and the user
   wants to upstream it.** AU and VOC improve existing gallery coverage; the
   other eight formats are net-new candidates.
 

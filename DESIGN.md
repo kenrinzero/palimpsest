@@ -155,8 +155,9 @@ if clearly-redistributable or self-authored-via-original-tools; otherwise
 a gitignored `samples/_staged/` cache with a refetchable manifest
 (provenance row either way). Tier-2's bounded self-consistency vocabulary is
 landed. Deeper or new assertion semantics require a future explicitly scoped
-harness unit; the Quarry hand-off remains deferred as the cross-plan schedule
-dictates.
+harness unit. The contract-only Quarry handoff is delivered in
+`QUARRY-HANDOFF.md`; executable extraction remains deferred to one-format
+Quarry units selected by Stratum prevalence.
 
 ## 7. What the seed shipped vs did not
 
