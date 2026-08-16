@@ -1,0 +1,11 @@
+{
+  "sample": "samples/alp/sine.alp",
+  "independence": "self-generated",
+  "fields": [
+    { "name": "sample_rate", "kaitai_path": "sample_rate", "ffprobe_path": ".streams[0].sample_rate", "kind": "numeric" },
+    { "name": "channels", "kaitai_path": "channels", "ffprobe_path": ".streams[0].channels", "kind": "numeric" },
+    { "name": "duration_samples", "kaitai_path": "duration_samples", "ffprobe_path": ".streams[0].duration_ts", "kind": "numeric" },
+    { "name": "codec_name", "kaitai_path": "codec_label", "ffprobe_path": ".streams[0].codec_name", "kind": "label" }
+  ],
+  "self_checked": []
+}

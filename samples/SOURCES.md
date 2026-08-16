@@ -93,6 +93,22 @@ ffmpeg -hide_banner -loglevel error \
 |---|---:|---|---|
 | `samples/argo_asf/sine.asf` | 2390 | self-generated (command above) | `f1c6082586f46b6f4be7c4fca926a1751ea00a289212f8f3854c92ed28d85e2d` |
 
+## Tier-6 self-generated — alp — 2026-08-16
+
+The `.alp` extension selects the muxer's .tun autodetection (header_size 8,
+implied 22050 Hz). Repeated renders were byte-identical.
+
+```bash
+ffmpeg -hide_banner -loglevel error \
+  -f lavfi -i 'sine=frequency=440:duration=0.2' \
+  -map_metadata -1 -fflags +bitexact -flags:a +bitexact \
+  -ar 22050 -ac 1 -f alp -y samples/alp/sine.alp
+```
+
+| file | bytes | provenance | sha256 |
+|---|---:|---|---|
+| `samples/alp/sine.alp` | 2221 | self-generated (command above) | `3619d700fe4beaa45f5171403296799946318bcaf2204d3d4a9c7f2d5669c482` |
+
 ## Decode-only heads — STAGED 2026-07-17 (Tier-3 prep unit)
 
 Third-party real bytes from the FFmpeg FATE suite
