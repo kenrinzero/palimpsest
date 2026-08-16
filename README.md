@@ -11,12 +11,11 @@ offset-sensitive field must match the oracle.
 
 ## Status
 
-Palimpsest is maintained through Tiers 1–5 (ten specs differential-GREEN).
-A **Tier 6 expansion** is queued — next unit `film_cpk`. See `BACKLOG.md`
-and `docs/superpowers/specs/2026-08-16-tier6-expansion-design.md`.
+Palimpsest is active on a Tier 6 expansion. Eleven specs are
+differential-GREEN. Next unit: `wsaud`. See `BACKLOG.md`.
 
-Ten shipped specs (2026-07-25): AU, VOC, RoQ, Smacker, Bink, Westwood VQA,
-Interplay MVE, FLIC/FLC, AIFF, and DPX.
+Shipped (Tiers 1–5, 2026-07-25): AU, VOC, RoQ, Smacker, Bink, Westwood VQA,
+Interplay MVE, FLIC/FLC, AIFF, and DPX. Tier 6: Sega FILM (`film_cpk`).
 
 **Breadth (Tier 4)** and **depth (Tier 5)** are complete for the planned
 set, including Bink audio/frame-offset tables and full VOC block walks.
@@ -24,9 +23,9 @@ set, including Bink audio/frame-offset tables and full VOC block walks.
 RoQ, FLIC, MVE, Bink, VOC) with redteam fixtures under
 `./check.sh --selftest` (9/9).
 
-**Kaitai gallery** (re-checked 2026-07-25): only `au` and
+**Kaitai gallery** (re-checked 2026-08-16): only `au` and
 `creative_voice_file` exist upstream — those two are gallery-improving;
-the other eight formats in this corpus remain **net-new**.
+every other shipped format, including `film_cpk`, is **net-new**.
 
 Harness: Temurin 21.0.11 + Kaitai compiler 0.11, pinned under
 `~/opt/kaitai` via `toolchain/provision.sh`.
@@ -46,7 +45,7 @@ uv run python harness/stage_heads.py
 
 # 4. Gates
 ./check.sh --selftest
-./check.sh au   # or any of the ten formats
+./check.sh au   # or any shipped format, including film_cpk
 ```
 
 Pinned oracle: **ffprobe 6.1.1**. If system FFmpeg drifts, stop and re-audit

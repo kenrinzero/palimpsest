@@ -35,6 +35,22 @@ ffmpeg -hide_banner -loglevel error \
 | `samples/aiff/sine.aiff` | 214 | self-generated (command above) | `da0f266289d94e7b9238b2094a2281bd3eb7193345384a4b95203841801eecab` |
 | `samples/dpx/test.dpx` | 3968 | self-generated (command above) | `30f6cc19b2c1ce02ec150dc04b4dcca17f463683c359f4a5811c88e09c134999` |
 
+## Tier-6 self-generated — film_cpk — 2026-08-16
+
+Outside the frozen `harness/gen_samples.sh` recipes. Repeated renders were
+byte-identical with pinned ffmpeg 6.1.1.
+
+```bash
+ffmpeg -hide_banner -loglevel error \
+  -f lavfi -i 'testsrc=size=32x24:duration=0.5:rate=15' -an \
+  -map_metadata -1 -fflags +bitexact -flags:v +bitexact \
+  -c:v cinepak -f film_cpk -y samples/film_cpk/test.cpk
+```
+
+| file | bytes | provenance | sha256 |
+|---|---:|---|---|
+| `samples/film_cpk/test.cpk` | 2592 | self-generated (command above) | `2197d49e2b531bff710d0f5d99cf871a10953602d1687f183d8c690ca8dd2d95` |
+
 ## Decode-only heads — STAGED 2026-07-17 (Tier-3 prep unit)
 
 Third-party real bytes from the FFmpeg FATE suite

@@ -1,0 +1,13 @@
+{
+  "sample": "samples/film_cpk/test.cpk",
+  "independence": "self-generated",
+  "fields": [
+    { "name": "width", "kaitai_path": "width", "ffprobe_path": ".streams[0].width", "kind": "numeric" },
+    { "name": "height", "kaitai_path": "height", "ffprobe_path": ".streams[0].height", "kind": "numeric" },
+    { "name": "num_frames", "kaitai_path": "num_frames", "ffprobe_path": ".streams[0].duration_ts", "kind": "numeric" },
+    { "name": "fps_num", "kaitai_path": "fps_num", "ffprobe_path": "(.streams[0].r_frame_rate | split(\"/\") | .[0])", "kind": "numeric" },
+    { "name": "fps_den", "kaitai_path": "fps_den", "ffprobe_path": "(.streams[0].r_frame_rate | split(\"/\") | .[1])", "kind": "numeric" },
+    { "name": "codec_name", "kaitai_path": "codec_label", "ffprobe_path": ".streams[0].codec_name", "kind": "label" }
+  ],
+  "self_checked": ["declared-count == walked-count"]
+}
