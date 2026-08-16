@@ -7,7 +7,7 @@ format is described by a Kaitai `.ksy` spec and checked against `ffprobe` with
 ## Current state
 
 **Tiers 1–5 complete; Tier 6 Waves A–C complete (2026-08-16).**
-Thirty-four specs GREEN. Wave D authoring is in progress (`paf`–`siff` GREEN).
+Thirty-five specs GREEN. Wave D authoring is in progress (`paf`–`bethsoftvid` GREEN).
 
 - Pinned toolchain + `ffprobe` 6.1.1. FATE heads restore with
   `./harness/stage_heads.py`.
@@ -15,8 +15,8 @@ Thirty-four specs GREEN. Wave D authoring is in progress (`paf`–`siff` GREEN).
 - Design note: `docs/superpowers/specs/2026-08-16-tier6-expansion-design.md`.
 - `DESIGN.md` stays **frozen**.
 
-**Next dispatchable unit:** Wave D `bethsoftvid` (STAGED). Then
-`dsicin`, `xa`, `bfstm`. The optional gallery PR stays user-gated.
+**Next dispatchable unit:** Wave D `dsicin` (STAGED). Then `xa`,
+`bfstm`. The optional gallery PR stays user-gated.
 
 ## How a cold agent picks this up
 
@@ -46,6 +46,7 @@ Thirty-four specs GREEN. Wave D authoring is in progress (`paf`–`siff` GREEN).
 | Interplay C93 (`c93`) | GREEN | staged FATE head |
 | Sierra SOL (`sol`) | GREEN | staged FATE head |
 | Beam SIFF (`siff`) | GREEN | staged FATE head |
+| Bethesda VID (`bethsoftvid`) | GREEN | staged FATE head |
 | PS1 STR (`psxstr`) | GREEN | staged FATE head |
 | Smacker (`smk`) | GREEN | staged FATE head |
 | SMJPEG (`smjpeg`) | GREEN | self-generated |
@@ -136,7 +137,7 @@ ten this session). `dsicin` is Delphine CIN, not id CIN.
 | `c93` | Interplay C93 (Cyberia) | GREEN | `cyberia-c93/intro1.c93` | `interplay.c93` |
 | `sol` | Sierra SOL | GREEN | `sol/lsl7sample.sol` | `sierra.sol` |
 | `siff` | Beam Software SIFF | GREEN | `SIFF/INTRO_B.VB` | `beam.siff` |
-| `bethsoftvid` | Bethesda VID | STAGED | `bethsoft-vid/ANIM0001.VID` | `bethesda.vid` |
+| `bethsoftvid` | Bethesda VID | GREEN | `bethsoft-vid/ANIM0001.VID` | `bethesda.vid` |
 | `dsicin` | Delphine CIN | STAGED | `delphine-cin/LOGO-partial.CIN` | `delphine.cin` |
 | `xa` | Maxis XA | STAGED | `maxis-xa/SC2KBUG.XA` | `maxis.xa` |
 | `bfstm` | Nintendo BFSTM | STAGED | `bfstm/spl-forest-day.bfstm` | `nintendo.bfstm` |
@@ -196,6 +197,7 @@ ten this session). `dsicin` is Delphine CIN, not id CIN.
 - [x] Wave D `c93` GREEN (2026-08-16).
 - [x] Wave D `sol` GREEN (2026-08-16).
 - [x] Wave D `siff` GREEN (2026-08-16).
+- [x] Wave D `bethsoftvid` GREEN (2026-08-16).
 
 ## How to verify the project
 
@@ -203,7 +205,7 @@ From the repository root:
 
 ```bash
 ./check.sh --selftest
-for f in au voc roq smk bink wsvqa ipmovie flic aiff dpx film_cpk wsaud ast argo_asf alp apm kvag smjpeg thp xmv smush vmd idcin wc3 fourxm yop brstm psxstr paf dxa bmv c93 sol siff; do
+for f in au voc roq smk bink wsvqa ipmovie flic aiff dpx film_cpk wsaud ast argo_asf alp apm kvag smjpeg thp xmv smush vmd idcin wc3 fourxm yop brstm psxstr paf dxa bmv c93 sol siff bethsoftvid; do
   ./check.sh "$f"
 done
 ```
