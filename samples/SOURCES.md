@@ -109,6 +109,19 @@ ffmpeg -hide_banner -loglevel error \
 |---|---:|---|---|
 | `samples/alp/sine.alp` | 2221 | self-generated (command above) | `3619d700fe4beaa45f5171403296799946318bcaf2204d3d4a9c7f2d5669c482` |
 
+## Tier-6 self-generated — apm — 2026-08-16
+
+```bash
+ffmpeg -hide_banner -loglevel error \
+  -f lavfi -i 'sine=frequency=440:duration=0.2' \
+  -map_metadata -1 -fflags +bitexact -flags:a +bitexact \
+  -ar 22050 -ac 1 -f apm -y samples/apm/sine.apm
+```
+
+| file | bytes | provenance | sha256 |
+|---|---:|---|---|
+| `samples/apm/sine.apm` | 2305 | self-generated (command above) | `014ab1c136ed25c19f31dac497bf2247b27b5d65857903a303b1c78d01081a66` |
+
 ## Decode-only heads — STAGED 2026-07-17 (Tier-3 prep unit)
 
 Third-party real bytes from the FFmpeg FATE suite

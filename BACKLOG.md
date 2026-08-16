@@ -19,7 +19,7 @@ encodable tail first, then a FATE staging unit, then decode-only heads.
 - `DESIGN.md` stays **frozen**. New units follow that contract; they do not
   edit the harness except the one Wave B staging unit.
 
-**Next dispatchable unit:** `apm` (Wave A, first UNSTARTED row).
+**Next dispatchable unit:** `kvag` (Wave A, first UNSTARTED row).
 
 ## How a cold agent picks this up
 
@@ -41,6 +41,7 @@ A decode-only head is **not** dispatchable until Wave B has marked it STAGED.
 | Format | Check | Sample/source |
 |---|---|---|
 | ALP (`alp`) | GREEN | self-generated |
+| APM (`apm`) | GREEN | self-generated |
 | Argonaut ASF (`argo_asf`) | GREEN | self-generated |
 | AST (`ast`) | GREEN | self-generated |
 | AU | GREEN | self-generated |
@@ -70,7 +71,7 @@ Gallery (re-checked 2026-08-16): all **net-new**. Do **not** edit frozen
 | `ast` | Nintendo AST | GREEN | `sine=440:duration=0.2`, `-ar 32000 -ac 2 -c:a pcm_s16be_planar -f ast` → `samples/ast/sine.ast` | sample_rate, channels, bits_per_sample, num_samples, codec_name | `nintendo.ast` |
 | `argo_asf` | Argonaut ASF (Croc) | GREEN | `sine=440:duration=0.2`, `-ar 22050 -ac 1 -f argo_asf -name sine` → `samples/argo_asf/sine.asf` | sample_rate, channels, num_frames, duration_samples, codec_name | `argo.asf` |
 | `alp` | LEGO Racers ALP | GREEN | `sine=440:duration=0.2`, `-ar 22050 -ac 1 -f alp` → `samples/alp/sine.alp` | sample_rate, channels, duration_samples, codec_name | `lego.alp` |
-| `apm` | Ubisoft APM | UNSTARTED | `sine=440:duration=0.2`, `-ar 22050 -ac 1 -f apm` → `samples/apm/sine.apm` | sample_rate, channels | `ubisoft.apm` |
+| `apm` | Ubisoft APM | GREEN | `sine=440:duration=0.2`, `-ar 22050 -ac 1 -f apm` → `samples/apm/sine.apm` | sample_rate, channels, file_size, duration_samples, codec_name | `ubisoft.apm` |
 | `kvag` | Simon & Schuster KVAG | UNSTARTED | `sine=440:duration=0.2`, `-ar 22050 -ac 1 -f kvag` → `samples/kvag/sine.kvag` | sample_rate, channels | `ssi.kvag` |
 | `smjpeg` | Loki SMJPEG | UNSTARTED | `testsrc=32x24:duration=0.5:rate=15`, `-an -c:v mjpeg -f smjpeg` → `samples/smjpeg/test.mjpg` | width, height | `loki.smjpeg` |
 
@@ -153,6 +154,7 @@ SOL, SIFF, Bethsoft VID, Delphine CIN, Maxis XA, BFSTM.
 - [x] Wave A `ast` GREEN (2026-08-16).
 - [x] Wave A `argo_asf` GREEN (2026-08-16).
 - [x] Wave A `alp` GREEN (2026-08-16).
+- [x] Wave A `apm` GREEN (2026-08-16).
 
 ## How to verify the project
 
@@ -160,7 +162,7 @@ From the repository root:
 
 ```bash
 ./check.sh --selftest
-for f in au voc roq smk bink wsvqa ipmovie flic aiff dpx film_cpk wsaud ast argo_asf alp; do
+for f in au voc roq smk bink wsvqa ipmovie flic aiff dpx film_cpk wsaud ast argo_asf alp apm; do
   ./check.sh "$f"
 done
 ```
