@@ -220,9 +220,9 @@
 
   Expected: exactly one non-stale `OPEN` Codex session for `coding/palimpsest`, still `active` before closure.
 
-- [ ] **Step 3: Prepare the concise brief transition**
+- [ ] **Step 3: Prepare the concise brief and INDEX transition**
 
-  Before clock-out, use `apply_patch` to update the brief's repository line to the exact short `origin/main` hash observed in Step 1, preserve the completed design-approval pointer from Task 1, and convert the remaining closure item into this concise completed pointer:
+  Before clock-out, use `apply_patch` to update both the brief's repository line and the Palimpsest INDEX row's repository cell to the exact short `origin/main` hash observed in Step 1. Preserve the completed design-approval pointer from Task 1, and convert the remaining closure item into this concise completed pointer:
 
   - `2026-08-16 — Palimpsest and Quarry handoff documentation landed and synchronized; see the project log.`
 
@@ -236,7 +236,7 @@
   - Week summary: `Closed Palimpsest as a maintained specification feeder after pushing the contract-only Quarry handoff and verifying both repositories.`
   - Decision: `Future Quarry integration is one Stratum-ranked format per unit; Palimpsest green never substitutes for Quarry extraction evidence.`
   - Open/next: the optional gallery/publication decision remains separately user-gated.
-  - Brief status: `maintained`.
+  - Brief status: `maintained`; the INDEX row must render the same status, last-touched date, and repository hash.
   - Brief current: `All ten format specs and gates are complete; the contract-only Quarry handoff is documented and synchronized, with future extractor work selected by Stratum prevalence.`
   - Brief next: `Consider an upstream Kaitai gallery PR only if the project becomes public and the user wants it.`
 
@@ -246,7 +246,7 @@
 
   Read the final Palimpsest brief, newest Palimpsest log entry, current week tail, and matching INDEX row. Confirm:
 
-  - Palimpsest is `maintained`, last touched 2026-08-16.
+  - Palimpsest is `maintained`, last touched 2026-08-16, and the brief/INDEX repository references both name the synchronized short `origin/main` hash.
   - The current state is a one-sentence maintained snapshot.
   - Only the optional, explicitly user-gated gallery item remains open.
   - Both Git repositories remain clean and synchronized after control-plane closure.
