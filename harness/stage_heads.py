@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Tier-3 prep — stage the five decode-only head-format samples.
+"""Stage the decode-only head-format samples (Tier-3 five + Wave C ten).
 
 Source: the FFmpeg FATE suite (fate-suite.ffmpeg.org) — the exact corpus
 ffmpeg tests these demuxers against, so ffprobe compatibility is
@@ -22,7 +22,8 @@ ROOT = Path(__file__).resolve().parent.parent
 STAGED = ROOT / "samples" / "_staged"
 BASE = "https://fate-suite.ffmpeg.org/"
 
-# (fate path, format dir, pinned sha256 — TOFU'd 2026-07-17, now frozen)
+# (fate path, format dir, pinned sha256 — TOFU then freeze)
+# Tier-3 five: TOFU'd 2026-07-17. Wave C ten: TOFU'd 2026-08-16, now frozen.
 HEADS = [
     ("smacker/wetlogo.smk", "smk",
      "dfba9d646f0889f073edb3c3241115f92b4c84f5c567da3e0f5bc7900f646c49"),
@@ -34,6 +35,26 @@ HEADS = [
      "d0dcedcfd18385ed18e57fd30a83de23f36d3745377f140df90dd873c7610469"),
     ("fli/jj00c2.fli", "flic",
      "41038fd05f38115350c4ba09cf05fb20b8f3bc3cc6538b74e23ea4b12499e1a6"),
+    ("thp/pikmin2-opening1-partial.thp", "thp",
+     "b3a1fbf33c8fbd005bcd146d1d2794fe05d51dd9b6ac5bfaa546d7499182386f"),
+    ("xmv/logos1p.fmv", "xmv",
+     "e038ce40e73e449ae9a729db3132e59a23e75af0a2f2471315ccf5e4814865b3"),
+    ("smush/ronin_part.znm", "smush",
+     "b76a9dd66a77f8b4bf81c92df2dc45cc2a403067c39463adde46c0ddffc9e9a8"),
+    ("vmd/12.vmd", "vmd",
+     "1ed09ce9804a08b964a1b63cbef9327df690983663c26be7973541de786ccf57"),
+    ("idcin/idlog-2MB.cin", "idcin",
+     "92f29679c92c35aa908c1237e4d4586a83c2e1d23e02c3006b2fc523406bb9e5"),
+    ("wc3movie/SC_32-part.MVE", "wc3",
+     "335f0896af05a109e01096bd19f65d1e185d2c622f4e02a148734ac5c0b5eb4b"),
+    ("4xm/version1.4xm", "4xm",
+     "b8326c1eb42b13eb645a2ed68ec9f0e01dca3551e895520837f530946f57cebf"),
+    ("yop/test1.yop", "yop",
+     "9556f42dfee0f982ea962c37e601d3bc55149bf834a998ea827777a157c8a323"),
+    ("brstm/lozswd_partial.brstm", "brstm",
+     "5c90dc6ad3e0ed89402c422570ae0d836518557d944bcf77b5a29712b16d551d"),
+    ("psx-str/abc000_cut.str", "psxstr",
+     "681df9dd0a50fccdd55553c1fa6b985fc47b3ea0177d18848158134944dab0a8"),
 ]
 
 

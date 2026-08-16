@@ -12,8 +12,8 @@ offset-sensitive field must match the oracle.
 ## Status
 
 Palimpsest is active on a Tier 6 expansion. Eighteen specs are
-differential-GREEN. Wave A is complete. Next: Wave B FATE staging.
-See `BACKLOG.md`.
+differential-GREEN. Wave A and Wave B are complete. Next: Wave C
+decode-only heads, starting with `thp`. See `BACKLOG.md`.
 
 Shipped (Tiers 1–5, 2026-07-25): AU, VOC, RoQ, Smacker, Bink, Westwood VQA,
 Interplay MVE, FLIC/FLC, AIFF, and DPX. Tier 6 Wave A: `film_cpk`, `wsaud`,

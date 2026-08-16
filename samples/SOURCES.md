@@ -171,5 +171,30 @@ all five: full** (third-party bytes, spec- and sample-independent).
 Full sha256 values are pinned in `harness/stage_heads.py` (a refetch
 fails loudly on drift).
 
+## Decode-only heads — STAGED 2026-08-16 (Tier 6 Wave B)
+
+Ten additional FATE heads for Wave C. Same license posture as the
+Tier-3 five: gitignored `samples/_staged/`, sha256-pinned in
+`harness/stage_heads.py`. Probed green with ffprobe 6.1.1-3ubuntu5 at
+staging time — every sample exposes numeric oracle fields.
+Independence for all ten: **third-party**. `wc3` is Westwood WC3 movie
+(`format_name=wc3movie`), not Interplay MVE.
+
+| file (gitignored) | bytes | origin (fate-suite path) | ffprobe 6.1.1 at staging |
+|---|---|---|---|
+| `_staged/thp/pikmin2-opening1-partial.thp` | 1048576 | `thp/pikmin2-opening1-partial.thp` (upstream md5 ok) | thp: thp 608×320 @30000/1001 + adpcm_thp 32000Hz/2ch |
+| `_staged/xmv/logos1p.fmv` | 983040 | `xmv/logos1p.fmv` | xmv: wmv2 640×480 @25 + adpcm_ima_wav 44100Hz/2ch |
+| `_staged/smush/ronin_part.znm` | 262144 | `smush/ronin_part.znm` | smush: sanm 640×480 @15 + adpcm_vima 22050Hz/2ch |
+| `_staged/vmd/12.vmd` | 700396 | `vmd/12.vmd` (upstream md5 ok) | vmd: vmdvideo 320×240 @10 + vmdaudio 22050Hz/1ch |
+| `_staged/idcin/idlog-2MB.cin` | 2097152 | `idcin/idlog-2MB.cin` (upstream md5 ok) | idcin: idcin 320×240 @14 + pcm_s16le 22050Hz/2ch |
+| `_staged/wc3/SC_32-part.MVE` | 445680 | `wc3movie/SC_32-part.MVE` (upstream md5 ok) | wc3movie: xan_wc3 320×165 @15 + pcm_s16le 22050Hz/1ch |
+| `_staged/4xm/version1.4xm` | 430000 | `4xm/version1.4xm` | 4xm: 4xm 640×480 @15 + pcm_s16le 22050Hz/2ch |
+| `_staged/yop/test1.yop` | 300000 | `yop/test1.yop` | yop: yop 580×174 @12 + adpcm_ima_apc 22050Hz/1ch |
+| `_staged/brstm/lozswd_partial.brstm` | 204800 | `brstm/lozswd_partial.brstm` | brstm: adpcm_thp 32000Hz/6ch (audio-only) |
+| `_staged/psxstr/abc000_cut.str` | 700000 | `psx-str/abc000_cut.str` | psxstr: mdec 320×160 @15 + adpcm_xa 37800Hz/2ch |
+
+Full sha256 values are pinned in `harness/stage_heads.py` (a refetch
+fails loudly on drift).
+
 Toolchain pin (DESIGN.md sec.1): Temurin JRE 21.0.11 + kaitai-struct-compiler 0.11
 + pypi kaitaistruct 0.11, at ~/opt/kaitai (re-create: toolchain/provision.sh).

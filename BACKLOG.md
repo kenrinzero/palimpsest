@@ -6,27 +6,24 @@ format is described by a Kaitai `.ksy` spec and checked against `ffprobe` with
 
 ## Current state
 
-**Tiers 1–5 complete; Tier 6 expansion authorized 2026-08-16.** Approach C:
-encodable tail first, then a FATE staging unit, then decode-only heads.
+**Tiers 1–5 complete; Tier 6 Wave A and Wave B complete (2026-08-16).**
+Eighteen specs GREEN. Ten Wave C FATE heads are staged and sha256-pinned.
 
-- Implementation/spec baseline remains `9533efc`. Later commits through
-  `8b14dca` are documentation (clone notes, backlog rewrite, Quarry handoff).
-- All **ten** existing format checks are GREEN. `./check.sh --selftest` is
-  GREEN (9/9).
-- Pinned toolchain + `ffprobe` 6.1.1. Existing FATE heads restore with
+- Pinned toolchain + `ffprobe` 6.1.1. FATE heads restore with
   `./harness/stage_heads.py`.
+- `./check.sh --selftest` is GREEN (9/9).
 - Design note: `docs/superpowers/specs/2026-08-16-tier6-expansion-design.md`.
-- `DESIGN.md` stays **frozen**. New units follow that contract; they do not
-  edit the harness except the one Wave B staging unit.
+- `DESIGN.md` stays **frozen**. Wave C authoring units touch only that
+  format's `.ksy` and sidecar.
 
-**Next dispatchable unit:** Wave B (extend `harness/stage_heads.py` with the
-Wave C FATE paths, then `./check.sh --selftest`). No Wave A rows remain.
+**Next dispatchable unit:** Wave C `thp` (Sample **STAGED**). Wave A and
+Wave B are done.
 
 ## How a cold agent picks this up
 
 1. Read `AGENTS.md` and frozen `DESIGN.md`.
-2. Take **exactly one** unchecked Wave A row (or Wave B if A is done, or
-   one Wave C row whose Sample column says **STAGED**).
+2. Take **exactly one** Wave C row whose Sample column says **STAGED**
+   and which is not yet GREEN.
 3. Authoring unit touches only that format's `.ksy`, sidecar, sample (Wave A)
    or `.ksy` + sidecar (Wave C). Never another format, never the harness,
    never `redteam/`.
@@ -83,14 +80,10 @@ ffprobe 6.1.1-3ubuntu5. Re-probe before authoring if ffmpeg has drifted.
 
 ## Tier 6 — Wave B (staging unit)
 
-**One** explicitly-scoped harness unit, only after Wave A is done (or if a
-later session is told to stage early). Extend `harness/stage_heads.py` `HEADS`
-with the Wave C FATE paths. Payloads stay gitignored under `samples/_staged/`.
-Pin sha256 (TOFU on first fetch, then freeze). Add `samples/SOURCES.md` rows.
-Then `./check.sh --selftest` (9/9 must still bite). Do not author a `.ksy`
-in the same unit.
-
-Mark each Wave C Sample cell **STAGED** only after the pin + refetch succeed.
+**DONE 2026-08-16.** Extended `harness/stage_heads.py` `HEADS` with the ten
+Wave C FATE paths. Payloads stay gitignored under `samples/_staged/`.
+sha256 pinned (TOFU then freeze). `samples/SOURCES.md` rows added.
+`./check.sh --selftest` still 9/9. No `.ksy` authored in this unit.
 
 ## Tier 6 — Wave C (decode-only heads)
 
@@ -99,16 +92,16 @@ Dispatchable only when Sample says STAGED.
 
 | Slug | Format | Sample | FATE path | Advisory Quarry ID |
 |---|---|---|---|---|
-| `thp` | GameCube THP | UNSTAGED | `thp/pikmin2-opening1-partial.thp` | `nintendo.thp` |
-| `xmv` | Xbox XMV | UNSTAGED | `xmv/logos1p.fmv` | `xbox.xmv` |
-| `smush` | LucasArts Smush | UNSTAGED | `smush/ronin_part.znm` | `lucasarts.smush` |
-| `vmd` | Sierra VMD | UNSTAGED | `vmd/12.vmd` | `sierra.vmd` |
-| `idcin` | id CIN | UNSTAGED | `idcin/idlog-2MB.cin` | `id.cin` |
-| `wc3` | Westwood WC3 movie | UNSTAGED | `wc3movie/SC_32-part.MVE` | `westwood.wc3` |
-| `4xm` | 4X / 4XM | UNSTAGED | `4xm/version1.4xm` | `4x.4xm` |
-| `yop` | Psygnosis YOP | UNSTAGED | `yop/test1.yop` | `psygnosis.yop` |
-| `brstm` | Nintendo BRSTM | UNSTAGED | `brstm/lozswd_partial.brstm` | `nintendo.brstm` |
-| `psxstr` | PS1 STR | UNSTAGED | `psx-str/abc000_cut.str` | `sony.str` |
+| `thp` | GameCube THP | STAGED | `thp/pikmin2-opening1-partial.thp` | `nintendo.thp` |
+| `xmv` | Xbox XMV | STAGED | `xmv/logos1p.fmv` | `xbox.xmv` |
+| `smush` | LucasArts Smush | STAGED | `smush/ronin_part.znm` | `lucasarts.smush` |
+| `vmd` | Sierra VMD | STAGED | `vmd/12.vmd` | `sierra.vmd` |
+| `idcin` | id CIN | STAGED | `idcin/idlog-2MB.cin` | `id.cin` |
+| `wc3` | Westwood WC3 movie | STAGED | `wc3movie/SC_32-part.MVE` | `westwood.wc3` |
+| `4xm` | 4X / 4XM | STAGED | `4xm/version1.4xm` | `4x.4xm` |
+| `yop` | Psygnosis YOP | STAGED | `yop/test1.yop` | `psygnosis.yop` |
+| `brstm` | Nintendo BRSTM | STAGED | `brstm/lozswd_partial.brstm` | `nintendo.brstm` |
+| `psxstr` | PS1 STR | STAGED | `psx-str/abc000_cut.str` | `sony.str` |
 
 `wc3` is **not** Interplay MVE (`ipmovie`). Different container, same `.MVE`
 extension.
@@ -160,6 +153,7 @@ SOL, SIFF, Bethsoft VID, Delphine CIN, Maxis XA, BFSTM.
 - [x] Wave A `apm` GREEN (2026-08-16).
 - [x] Wave A `kvag` GREEN (2026-08-16).
 - [x] Wave A `smjpeg` GREEN (2026-08-16). Wave A complete.
+- [x] Wave B FATE staging (2026-08-16). Ten Wave C heads pinned.
 
 ## How to verify the project
 
