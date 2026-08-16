@@ -11,9 +11,12 @@ offset-sensitive field must match the oracle.
 
 ## Status
 
-Palimpsest is maintained: its planned implementation scope is complete. Ten
-specs are differential-GREEN on `main` (2026-07-25): AU, VOC, RoQ,
-Smacker, Bink, Westwood VQA, Interplay MVE, FLIC/FLC, AIFF, and DPX.
+Palimpsest is maintained through Tiers 1–5 (ten specs differential-GREEN).
+A **Tier 6 expansion** is queued — next unit `film_cpk`. See `BACKLOG.md`
+and `docs/superpowers/specs/2026-08-16-tier6-expansion-design.md`.
+
+Ten shipped specs (2026-07-25): AU, VOC, RoQ, Smacker, Bink, Westwood VQA,
+Interplay MVE, FLIC/FLC, AIFF, and DPX.
 
 **Breadth (Tier 4)** and **depth (Tier 5)** are complete for the planned
 set, including Bink audio/frame-offset tables and full VOC block walks.
