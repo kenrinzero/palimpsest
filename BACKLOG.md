@@ -7,7 +7,7 @@ format is described by a Kaitai `.ksy` spec and checked against `ffprobe` with
 ## Current state
 
 **Tiers 1–5 complete; Tier 6 Wave A and Wave B complete (2026-08-16).**
-Eighteen specs GREEN. Ten Wave C FATE heads are staged and sha256-pinned.
+Nineteen specs GREEN. Nine Wave C FATE heads remain staged.
 
 - Pinned toolchain + `ffprobe` 6.1.1. FATE heads restore with
   `./harness/stage_heads.py`.
@@ -16,8 +16,7 @@ Eighteen specs GREEN. Ten Wave C FATE heads are staged and sha256-pinned.
 - `DESIGN.md` stays **frozen**. Wave C authoring units touch only that
   format's `.ksy` and sidecar.
 
-**Next dispatchable unit:** Wave C `thp` (Sample **STAGED**). Wave A and
-Wave B are done.
+**Next dispatchable unit:** Wave C `xmv` (Sample **STAGED**).
 
 ## How a cold agent picks this up
 
@@ -54,6 +53,7 @@ A decode-only head is **not** dispatchable until Wave B has marked it STAGED.
 | Interplay MVE (`ipmovie`) | GREEN | staged FATE head |
 | KVAG (`kvag`) | GREEN | self-generated |
 | FLIC/FLC | GREEN | staged FATE head |
+| GameCube THP (`thp`) | GREEN | staged FATE head |
 | AIFF | GREEN | self-generated |
 | DPX | GREEN | self-generated |
 
@@ -92,7 +92,7 @@ Dispatchable only when Sample says STAGED.
 
 | Slug | Format | Sample | FATE path | Advisory Quarry ID |
 |---|---|---|---|---|
-| `thp` | GameCube THP | STAGED | `thp/pikmin2-opening1-partial.thp` | `nintendo.thp` |
+| `thp` | GameCube THP | GREEN | `thp/pikmin2-opening1-partial.thp` | `nintendo.thp` |
 | `xmv` | Xbox XMV | STAGED | `xmv/logos1p.fmv` | `xbox.xmv` |
 | `smush` | LucasArts Smush | STAGED | `smush/ronin_part.znm` | `lucasarts.smush` |
 | `vmd` | Sierra VMD | STAGED | `vmd/12.vmd` | `sierra.vmd` |
@@ -154,6 +154,7 @@ SOL, SIFF, Bethsoft VID, Delphine CIN, Maxis XA, BFSTM.
 - [x] Wave A `kvag` GREEN (2026-08-16).
 - [x] Wave A `smjpeg` GREEN (2026-08-16). Wave A complete.
 - [x] Wave B FATE staging (2026-08-16). Ten Wave C heads pinned.
+- [x] Wave C `thp` GREEN (2026-08-16).
 
 ## How to verify the project
 
@@ -161,7 +162,7 @@ From the repository root:
 
 ```bash
 ./check.sh --selftest
-for f in au voc roq smk bink wsvqa ipmovie flic aiff dpx film_cpk wsaud ast argo_asf alp apm kvag smjpeg; do
+for f in au voc roq smk bink wsvqa ipmovie flic aiff dpx film_cpk wsaud ast argo_asf alp apm kvag smjpeg thp; do
   ./check.sh "$f"
 done
 ```
