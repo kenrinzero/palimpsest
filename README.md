@@ -11,11 +11,11 @@ offset-sensitive field must match the oracle.
 
 ## Status
 
-Palimpsest is active on a Tier 6 expansion. Twelve specs are
-differential-GREEN. Next unit: `ast`. See `BACKLOG.md`.
+Palimpsest is active on a Tier 6 expansion. Thirteen specs are
+differential-GREEN. Next unit: `argo_asf`. See `BACKLOG.md`.
 
 Shipped (Tiers 1–5, 2026-07-25): AU, VOC, RoQ, Smacker, Bink, Westwood VQA,
-Interplay MVE, FLIC/FLC, AIFF, and DPX. Tier 6: `film_cpk`, `wsaud`.
+Interplay MVE, FLIC/FLC, AIFF, and DPX. Tier 6: `film_cpk`, `wsaud`, `ast`.
 
 **Breadth (Tier 4)** and **depth (Tier 5)** are complete for the planned
 set, including Bink audio/frame-offset tables and full VOC block walks.

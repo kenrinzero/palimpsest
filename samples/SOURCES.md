@@ -64,6 +64,19 @@ ffmpeg -hide_banner -loglevel error \
 |---|---:|---|---|
 | `samples/wsaud/sine.aud` | 2241 | self-generated (command above) | `4960194ae84105a7a40425c8520828ab9e4c005ff1c5b65c5c6088f25d41b9f2` |
 
+## Tier-6 self-generated — ast — 2026-08-16
+
+```bash
+ffmpeg -hide_banner -loglevel error \
+  -f lavfi -i 'sine=frequency=440:duration=0.2' \
+  -map_metadata -1 -fflags +bitexact -flags:a +bitexact \
+  -ar 32000 -ac 2 -c:a pcm_s16be_planar -f ast -y samples/ast/sine.ast
+```
+
+| file | bytes | provenance | sha256 |
+|---|---:|---|---|
+| `samples/ast/sine.ast` | 25984 | self-generated (command above) | `411b9f3d2c500be4d099524d5c3319221dbb8d9db5d325a89e489240119add93` |
+
 ## Decode-only heads — STAGED 2026-07-17 (Tier-3 prep unit)
 
 Third-party real bytes from the FFmpeg FATE suite
