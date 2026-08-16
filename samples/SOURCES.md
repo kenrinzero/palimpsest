@@ -135,6 +135,19 @@ ffmpeg -hide_banner -loglevel error \
 |---|---:|---|---|
 | `samples/kvag/sine.kvag` | 2219 | self-generated (command above) | `2ee29dc2c79f1e8e23d79915293439dd4040bf1e58aac6b41b51250a18cb0302` |
 
+## Tier-6 self-generated — smjpeg — 2026-08-16
+
+```bash
+ffmpeg -hide_banner -loglevel error \
+  -f lavfi -i 'testsrc=size=32x24:duration=0.5:rate=15' -an \
+  -map_metadata -1 -fflags +bitexact -flags:v +bitexact \
+  -c:v mjpeg -f smjpeg -y samples/smjpeg/test.mjpg
+```
+
+| file | bytes | provenance | sha256 |
+|---|---:|---|---|
+| `samples/smjpeg/test.mjpg` | 10025 | self-generated (command above) | `6948dc4b76eb30daf02acd018725ad2cc6bf62f4663e4b61a57cba2b232f38c7` |
+
 ## Decode-only heads — STAGED 2026-07-17 (Tier-3 prep unit)
 
 Third-party real bytes from the FFmpeg FATE suite
