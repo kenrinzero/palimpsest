@@ -6,32 +6,26 @@ format is described by a Kaitai `.ksy` spec and checked against `ffprobe` with
 
 ## Current state
 
-**Tiers 1–5 complete; Tier 6 Wave A and Wave B complete (2026-08-16).**
-Twenty-seven specs GREEN. One Wave C FATE head remains staged.
+**Tiers 1–5 complete; Tier 6 Waves A–C complete (2026-08-16).**
+Twenty-eight specs GREEN. Wave D remains parked.
 
 - Pinned toolchain + `ffprobe` 6.1.1. FATE heads restore with
   `./harness/stage_heads.py`.
 - `./check.sh --selftest` is GREEN (9/9).
 - Design note: `docs/superpowers/specs/2026-08-16-tier6-expansion-design.md`.
-- `DESIGN.md` stays **frozen**. Wave C authoring units touch only that
-  format's `.ksy` and sidecar.
+- `DESIGN.md` stays **frozen**.
 
-**Next dispatchable unit:** Wave C `psxstr` (Sample **STAGED**).
+**Next dispatchable unit:** none. Wave C is complete. Wave D is parked
+unless a later session explicitly adds it. The optional gallery PR stays
+user-gated.
 
 ## How a cold agent picks this up
 
 1. Read `AGENTS.md` and frozen `DESIGN.md`.
-2. Take **exactly one** Wave C row whose Sample column says **STAGED**
-   and which is not yet GREEN.
-3. Authoring unit touches only that format's `.ksy`, sidecar, sample (Wave A)
-   or `.ksy` + sidecar (Wave C). Never another format, never the harness,
-   never `redteam/`.
-4. Gate: `./check.sh <fmt>` must be GREEN. State the independence regime
-   from the row. Gallery flag is part of the claim — keep it accurate.
-5. After green: flip the row, add a `QUARRY-HANDOFF.md` inventory line,
-   commit. Then stop or take the next unchecked row.
-
-A decode-only head is **not** dispatchable until Wave B has marked it STAGED.
+2. There is no Wave C row left. Do not start Wave D unless the user
+   explicitly authorizes it. The optional gallery PR is user-gated.
+3. Authoring units still touch only one format's `.ksy` and sidecar.
+   Never the harness, never `redteam/`.
 
 ## Existing inventory (Tiers 1–5) — GREEN
 
@@ -46,6 +40,7 @@ A decode-only head is **not** dispatchable until Wave B has marked it STAGED.
 | Westwood AUD (`wsaud`) | GREEN | self-generated |
 | VOC | GREEN | self-generated |
 | RoQ | GREEN | self-generated |
+| PS1 STR (`psxstr`) | GREEN | staged FATE head |
 | Smacker (`smk`) | GREEN | staged FATE head |
 | SMJPEG (`smjpeg`) | GREEN | self-generated |
 | Bink | GREEN | staged FATE head |
@@ -96,7 +91,7 @@ sha256 pinned (TOFU then freeze). `samples/SOURCES.md` rows added.
 ## Tier 6 — Wave C (decode-only heads)
 
 Independence: **third-party**. Gallery: all **net-new** as of 2026-08-16.
-Dispatchable only when Sample says STAGED.
+**DONE 2026-08-16.** All ten heads GREEN.
 
 | Slug | Format | Sample | FATE path | Advisory Quarry ID |
 |---|---|---|---|---|
@@ -109,7 +104,7 @@ Dispatchable only when Sample says STAGED.
 | `fourxm` | 4X / 4XM | GREEN | `4xm/version1.4xm` | `4x.4xm` |
 | `yop` | Psygnosis YOP | GREEN | `yop/test1.yop` | `psygnosis.yop` |
 | `brstm` | Nintendo BRSTM | GREEN | `brstm/lozswd_partial.brstm` | `nintendo.brstm` |
-| `psxstr` | PS1 STR | STAGED | `psx-str/abc000_cut.str` | `sony.str` |
+| `psxstr` | PS1 STR | GREEN | `psx-str/abc000_cut.str` | `sony.str` |
 
 `wc3` is **not** Interplay MVE (`ipmovie`). Different container, same `.MVE`
 extension.
@@ -174,6 +169,7 @@ SOL, SIFF, Bethsoft VID, Delphine CIN, Maxis XA, BFSTM.
 - [x] Wave C `fourxm` GREEN (2026-08-16). Slug is `fourxm` (Kaitai meta.id cannot start with a digit); FFmpeg `format_name` remains `4xm`.
 - [x] Wave C `yop` GREEN (2026-08-16).
 - [x] Wave C `brstm` GREEN (2026-08-16).
+- [x] Wave C `psxstr` GREEN (2026-08-16). Wave C complete.
 
 ## How to verify the project
 
@@ -181,7 +177,7 @@ From the repository root:
 
 ```bash
 ./check.sh --selftest
-for f in au voc roq smk bink wsvqa ipmovie flic aiff dpx film_cpk wsaud ast argo_asf alp apm kvag smjpeg thp xmv smush vmd idcin wc3 fourxm yop brstm; do
+for f in au voc roq smk bink wsvqa ipmovie flic aiff dpx film_cpk wsaud ast argo_asf alp apm kvag smjpeg thp xmv smush vmd idcin wc3 fourxm yop brstm psxstr; do
   ./check.sh "$f"
 done
 ```
