@@ -1,0 +1,15 @@
+{
+  "sample": "samples/_staged/yop/test1.yop",
+  "independence": "third-party",
+  "fields": [
+    { "name": "width", "kaitai_path": "width", "ffprobe_path": ".streams[1].width", "kind": "numeric" },
+    { "name": "height", "kaitai_path": "height", "ffprobe_path": ".streams[1].height", "kind": "numeric" },
+    { "name": "fps", "kaitai_path": "frame_rate", "ffprobe_path": "(.streams[1].r_frame_rate | split(\"/\") | .[0])", "kind": "numeric" },
+    { "name": "audio_sample_rate", "kaitai_path": "audio_sample_rate", "ffprobe_path": ".streams[0].sample_rate", "kind": "numeric" },
+    { "name": "audio_channels", "kaitai_path": "audio_channels", "ffprobe_path": ".streams[0].channels", "kind": "numeric" },
+    { "name": "audio_bit_rate", "kaitai_path": "audio_bit_rate", "ffprobe_path": ".streams[0].bit_rate", "kind": "numeric" },
+    { "name": "video_codec", "kaitai_path": "codec_label", "ffprobe_path": ".streams[1].codec_name", "kind": "label" },
+    { "name": "audio_codec", "kaitai_path": "audio_codec_label", "ffprobe_path": ".streams[0].codec_name", "kind": "label" }
+  ],
+  "self_checked": []
+}
