@@ -7,7 +7,7 @@ format is described by a Kaitai `.ksy` spec and checked against `ffprobe` with
 ## Current state
 
 **Tiers 1–5 complete; Tier 6 Wave A and Wave B complete (2026-08-16).**
-Twenty-one specs GREEN. Seven Wave C FATE heads remain staged.
+Twenty-two specs GREEN. Six Wave C FATE heads remain staged.
 
 - Pinned toolchain + `ffprobe` 6.1.1. FATE heads restore with
   `./harness/stage_heads.py`.
@@ -16,7 +16,7 @@ Twenty-one specs GREEN. Seven Wave C FATE heads remain staged.
 - `DESIGN.md` stays **frozen**. Wave C authoring units touch only that
   format's `.ksy` and sidecar.
 
-**Next dispatchable unit:** Wave C `vmd` (Sample **STAGED**).
+**Next dispatchable unit:** Wave C `idcin` (Sample **STAGED**).
 
 ## How a cold agent picks this up
 
@@ -56,6 +56,7 @@ A decode-only head is **not** dispatchable until Wave B has marked it STAGED.
 | GameCube THP (`thp`) | GREEN | staged FATE head |
 | Xbox XMV (`xmv`) | GREEN | staged FATE head |
 | LucasArts Smush (`smush`) | GREEN | staged FATE head |
+| Sierra VMD (`vmd`) | GREEN | staged FATE head |
 | AIFF | GREEN | self-generated |
 | DPX | GREEN | self-generated |
 
@@ -97,7 +98,7 @@ Dispatchable only when Sample says STAGED.
 | `thp` | GameCube THP | GREEN | `thp/pikmin2-opening1-partial.thp` | `nintendo.thp` |
 | `xmv` | Xbox XMV | GREEN | `xmv/logos1p.fmv` | `xbox.xmv` |
 | `smush` | LucasArts Smush | GREEN | `smush/ronin_part.znm` | `lucasarts.smush` |
-| `vmd` | Sierra VMD | STAGED | `vmd/12.vmd` | `sierra.vmd` |
+| `vmd` | Sierra VMD | GREEN | `vmd/12.vmd` | `sierra.vmd` |
 | `idcin` | id CIN | STAGED | `idcin/idlog-2MB.cin` | `id.cin` |
 | `wc3` | Westwood WC3 movie | STAGED | `wc3movie/SC_32-part.MVE` | `westwood.wc3` |
 | `4xm` | 4X / 4XM | STAGED | `4xm/version1.4xm` | `4x.4xm` |
@@ -159,6 +160,7 @@ SOL, SIFF, Bethsoft VID, Delphine CIN, Maxis XA, BFSTM.
 - [x] Wave C `thp` GREEN (2026-08-16).
 - [x] Wave C `xmv` GREEN (2026-08-16).
 - [x] Wave C `smush` GREEN (2026-08-16).
+- [x] Wave C `vmd` GREEN (2026-08-16).
 
 ## How to verify the project
 
@@ -166,7 +168,7 @@ From the repository root:
 
 ```bash
 ./check.sh --selftest
-for f in au voc roq smk bink wsvqa ipmovie flic aiff dpx film_cpk wsaud ast argo_asf alp apm kvag smjpeg thp xmv smush; do
+for f in au voc roq smk bink wsvqa ipmovie flic aiff dpx film_cpk wsaud ast argo_asf alp apm kvag smjpeg thp xmv smush vmd; do
   ./check.sh "$f"
 done
 ```
