@@ -7,8 +7,7 @@ format is described by a Kaitai `.ksy` spec and checked against `ffprobe` with
 ## Current state
 
 **Tiers 1–5 complete; Tier 6 Waves A–C complete (2026-08-16).**
-Twenty-eight specs GREEN. Wave D FATE heads are **STAGED**; authoring
-is not authorized yet.
+Twenty-nine specs GREEN. Wave D authoring is in progress (`paf` GREEN).
 
 - Pinned toolchain + `ffprobe` 6.1.1. FATE heads restore with
   `./harness/stage_heads.py`.
@@ -16,16 +15,15 @@ is not authorized yet.
 - Design note: `docs/superpowers/specs/2026-08-16-tier6-expansion-design.md`.
 - `DESIGN.md` stays **frozen**.
 
-**Next dispatchable unit:** none. Wave D samples are STAGED. Do not
-author a Wave D `.ksy` until a later session explicitly starts one
-(first would be `paf`). The optional gallery PR stays user-gated.
+**Next dispatchable unit:** Wave D `dxa` (STAGED). Then `bmv`, `c93`,
+`sol`, `siff`, `bethsoftvid`, `dsicin`, `xa`, `bfstm`. The optional
+gallery PR stays user-gated.
 
 ## How a cold agent picks this up
 
 1. Read `AGENTS.md` and frozen `DESIGN.md`.
-2. Wave D authoring is **not** dispatchable until the user starts a
-   named row. Samples are already STAGED. The optional gallery PR is
-   user-gated.
+2. Continue Wave D one format per unit. Samples are already STAGED.
+   The optional gallery PR is user-gated.
 3. Authoring units still touch only one format's `.ksy` and sidecar.
    Never the harness, never `redteam/` (except a dedicated staging
    unit like this Wave D pin).
@@ -43,6 +41,7 @@ author a Wave D `.ksy` until a later session explicitly starts one
 | Westwood AUD (`wsaud`) | GREEN | self-generated |
 | VOC | GREEN | self-generated |
 | RoQ | GREEN | self-generated |
+| Amazing Studio PAF (`paf`) | GREEN | staged FATE head |
 | PS1 STR (`psxstr`) | GREEN | staged FATE head |
 | Smacker (`smk`) | GREEN | staged FATE head |
 | SMJPEG (`smjpeg`) | GREEN | self-generated |
@@ -121,13 +120,13 @@ does not queue a Quarry extractor; Stratum still owns priority.
 ## Tier 6 — Wave D (decode-only heads)
 
 Independence: **third-party**. Gallery: all **net-new** as of 2026-08-16.
-Samples **STAGED 2026-08-16**. Authoring is **not** authorized until a
-later session names a row. `dsicin` is Delphine CIN, not id CIN.
+Samples **STAGED 2026-08-16**. Authoring authorized 2026-08-16 (all
+ten this session). `dsicin` is Delphine CIN, not id CIN.
 `xa` is Maxis XA (`adpcm_ea_maxis_xa`), not ADX.
 
 | Slug | Format | Sample | FATE path | Advisory Quarry ID |
 |---|---|---|---|---|
-| `paf` | Amazing Studio Packed Animation File | STAGED | `paf/hod1-partial.paf` | `amazing.paf` |
+| `paf` | Amazing Studio Packed Animation File | GREEN | `paf/hod1-partial.paf` | `amazing.paf` |
 | `dxa` | Feeble Files / ScummVM DXA | STAGED | `dxa/scummvm.dxa` | `scummvm.dxa` |
 | `bmv` | Discworld II BMV | STAGED | `bmv/SURFING-partial.BMV` | `discworld.bmv` |
 | `c93` | Interplay C93 (Cyberia) | STAGED | `cyberia-c93/intro1.c93` | `interplay.c93` |
@@ -187,6 +186,7 @@ later session names a row. `dsicin` is Delphine CIN, not id CIN.
 - [x] Wave C `brstm` GREEN (2026-08-16).
 - [x] Wave C `psxstr` GREEN (2026-08-16). Wave C complete.
 - [x] Wave D FATE staging (2026-08-16). Ten heads pinned. No `.ksy`.
+- [x] Wave D `paf` GREEN (2026-08-16).
 
 ## How to verify the project
 
@@ -194,7 +194,7 @@ From the repository root:
 
 ```bash
 ./check.sh --selftest
-for f in au voc roq smk bink wsvqa ipmovie flic aiff dpx film_cpk wsaud ast argo_asf alp apm kvag smjpeg thp xmv smush vmd idcin wc3 fourxm yop brstm psxstr; do
+for f in au voc roq smk bink wsvqa ipmovie flic aiff dpx film_cpk wsaud ast argo_asf alp apm kvag smjpeg thp xmv smush vmd idcin wc3 fourxm yop brstm psxstr paf; do
   ./check.sh "$f"
 done
 ```
